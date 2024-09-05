@@ -86,111 +86,18 @@ for i=1,floor_width do
     end;
 end;
 
-local pylon = Scene:add_polygon({
-    position = vec2(-2.5, -10 + 0.5 + (13/12)),
-    points = {
-        vec2((-11 / 12) * 0.5, (-8 / 12) * 0.5),
-        vec2((-11 / 12) * 0.5, -0.5),
-        vec2((11 / 12) * 0.5, -0.5),
-        vec2((11 / 12) * 0.5, (-8 / 12) * 0.5),
-        vec2((1 / 12) * 0.5, 0.5),
-        vec2((-1 / 12) * 0.5, 0.5),
-    },
-    -- color = Color:hex(0xffcb81),
-    color = Color:rgba(0,0,0,0),
-    is_static = false,
-});
-pylon:set_name("player_100");
-
-local hash = Scene:add_component({
-    name = "Pylon",
-    id = "@carroted/pylon_recon/pylon",
-    version = "0.1.0",
-    code = temp_load_string('./scripts/@carroted/pylon_recon/pylon.lua')
-});
-
-pylon:add_component(hash);
-
-local flingstick = Scene:add_box({
-    position = vec2(2, -10 + (13/12) + (5/12/2)),
-    size = vec2(34/12, 5/12),
-    color = Color:rgba(0,0,0,0),
-    is_static = false,
-});
-
-Scene:add_attachment({
-    name = "Image",
-    component = {
-        name = "Image",
-        code = temp_load_string('./scripts/core/hinge.lua'),
-    },
-    parent = flingstick,
-    local_position = vec2(0, 0),
-    local_angle = 0,
-    image = "~/scripts/@carroted/pylon_recon/assets/textures/weapons/flingstick.png",
-    size = 1 / 12,
-    color = Color:hex(0xffffff),
-});
-
-local hash = Scene:add_component({
-    name = "Weapon",
-    id = "@carroted/pylon_recon/weapon",
-    version = "0.1.0",
-    code = temp_load_string('./scripts/@carroted/pylon_recon/weapon.lua')
-});
-
-flingstick:add_component(hash);
-
-function spawn_small_crate(pos)
-    local crate = Scene:add_box({
-        position = pos,
-        size = vec2(11/12, 11/12),
-        color = Color:rgba(0,0,0,0),
-        is_static = false,
-    });
-    crate:set_friction(0.75);
-    crate:set_restitution(0);
-
-    Scene:add_attachment({
-        name = "Image",
-        component = {
-            name = "Image",
-            code = temp_load_string('./scripts/core/hinge.lua'),
-        },
-        parent = crate,
-        local_position = vec2(0, 0),
-        local_angle = 0,
-        image = "~/scripts/@carroted/pylon_recon/assets/textures/crate_small.png",
-        size = 1 / 12,
-        color = Color:hex(0xffffff),
-    });
-end;
-
-function spawn_large_crate(pos)
-    local crate = Scene:add_box({
-        position = pos,
-        size = vec2(16/12, 16/12),
-        color = Color:rgba(0,0,0,0),
-        is_static = false,
-    });
-    crate:set_friction(0.75);
-    crate:set_restitution(0);
-
-    Scene:add_attachment({
-        name = "Image",
-        component = {
-            name = "Image",
-            code = temp_load_string('./scripts/core/hinge.lua'),
-        },
-        parent = crate,
-        local_position = vec2(0, 0),
-        local_angle = 0,
-        image = "~/scripts/@carroted/pylon_recon/assets/textures/crate_large.png",
-        size = 1 / 12,
-        color = Color:hex(0xffffff),
-    });
-end;
+local spawn_small_crate = require('./scripts/@carroted/pylon_recon/lib/spawn_small_crate.lua');
+local spawn_large_crate = require('./scripts/@carroted/pylon_recon/lib/spawn_large_crate.lua');
 
 spawn_small_crate(vec2(-7, -10 + (13/12) + (11/12/2)));
 spawn_large_crate(vec2(-8.15, -10 + (13/12) + (16/12/2)));
 spawn_small_crate(vec2(-7.8, -10 + (13/12) + (16/12) + (11/12/2)));
+
+local spawn_pylon = require('./scripts/@carroted/pylon_recon/lib/spawn_pylon.lua');
+spawn_pylon(vec2(-2.5, -10 + 0.5 + (13/12)));
+
+local spawn_flingstick = require('./scripts/@carroted/pylon_recon/lib/spawn_flingstick.lua');
+spawn_flingstick(vec2(2, -10 + (13/12) + (5/12/2)));
+
+local spawn_gun = require('./scripts/@carroted/pylon_recon/lib/spawn_gun.lua');
+spawn_gun(vec2(4, -10 + (13/12) + (5/12/2)));

@@ -21,7 +21,6 @@ local weapon = nil;
 local weapon_player_joint = nil;
 local weapon_ground_joint = nil;
 local ground = nil;
-local weapon_overlay = nil;
 
 -- Physics and Rendering Setup
 
@@ -29,28 +28,25 @@ self:set_angle_locked(true);
 self:set_angle(0);
 self:set_restitution(0);
 
-local sprite = nil;
+local sprite = Scene:add_attachment({
+    name = "Image",
+    component = {
+        name = "Image",
+        code = temp_load_string('./scripts/core/hinge.lua'),
+    },
+    parent = self,
+    local_position = vec2(0, 0),
+    local_angle = 0,
+    image = "~/scripts/@carroted/pylon_recon/assets/textures/entities/cone.png",
+    size = 1 / 12,
+    color = Color:hex(0xffffff),
+    flip_x = facing_left,
+});
+
 local facing_left = false;
 
 function redraw_sprite()
-    if sprite ~= nil then
-        sprite:destroy();
-    end;
-
-    sprite = Scene:add_attachment({
-        name = "Image",
-        component = {
-            name = "Image",
-            code = temp_load_string('./scripts/core/hinge.lua'),
-        },
-        parent = self,
-        local_position = vec2(0, 0),
-        local_angle = 0,
-        image = "~/scripts/@carroted/pylon_recon/assets/textures/entities/cone.png",
-        size = 1 / 12,
-        color = Color:hex(0xffffff),
-        flip_x = facing_left,
-    });
+    sprite:set_flip_x(facing_left);
 end;
 
 redraw_sprite();
@@ -58,7 +54,7 @@ redraw_sprite();
 -- Events
 
 function on_event(id, data)
-    if id == "@carroted/pylon_recon/weapon" then
+    if id == "@carroted/pylon_recon/weapon/pickup" then
         if weapon == nil then
             weapon = Scene:get_object_by_guid(data.guid);
             weapon:temp_set_collides(false);
@@ -114,8 +110,6 @@ function update_weapon()
         end
 
         if math.abs(diff) > max_angle then
-            print("--\ncurrent: " .. tostring(current_angle) .. "\ntarget:  " .. tostring(angle) .. "\n--");
-            
             weapon:set_angular_velocity(weapon:get_angular_velocity() + (diff * 0.2));
         end;
     end;
@@ -191,18 +185,8 @@ function on_update()
 
         weapon:temp_set_is_static(false);
 
-        weapon_overlay = Scene:add_attachment({
-            name = "Image",
-            component = {
-                name = "Image",
-                code = temp_load_string('./scripts/core/hinge.lua'),
-            },
-            parent = weapon,
-            local_position = vec2(0, 0),
-            local_angle = 0,
-            image = "~/scripts/@carroted/pylon_recon/assets/textures/weapons/flingstick_overlay.png",
-            size = 1 / 12,
-            color = Color:hex(0xffffff),
+        weapon:send_event("@carroted/pylon_recon/weapon/set_overlay_enabled", {
+            enabled = true,
         });
     end;
 
@@ -213,8 +197,9 @@ function on_update()
         weapon_player_joint = nil;
         weapon_ground_joint = nil;
         weapon:temp_set_is_static(true);
-        weapon_overlay:destroy();
-        weapon_overlay = nil;
+        weapon:send_event("@carroted/pylon_recon/weapon/set_overlay_enabled", {
+            enabled = false,
+        });
     end;
 end;
 
