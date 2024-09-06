@@ -10,7 +10,7 @@ local function spawn_gun(pos)
         name = "Image",
         component = {
             name = "Image",
-            code = temp_load_string('./scripts/core/hinge.lua'),
+            code = require('./scripts/core/hinge.lua', 'string'),
         },
         parent = gun,
         local_position = vec2(0, 1/12),
@@ -24,7 +24,7 @@ local function spawn_gun(pos)
         name = "Weapon",
         id = "@carroted/pylon_recon/weapon",
         version = "0.1.0",
-        code = temp_load_string('./scripts/@carroted/pylon_recon/weapon.lua')
+        code = require('./scripts/@carroted/pylon_recon/weapon.lua', 'string')
     });
 
     gun:add_component(hash);

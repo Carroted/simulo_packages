@@ -12,7 +12,7 @@ local function spawn_small_crate(pos)
         name = "Image",
         component = {
             name = "Image",
-            code = temp_load_string('./scripts/core/hinge.lua'),
+            code = require('./scripts/core/hinge.lua', 'string'),
         },
         parent = crate,
         local_position = vec2(0, 0),

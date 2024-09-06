@@ -22,7 +22,7 @@ for i=1,floor_width do
             name = "Image",
             component = {
                 name = "Image",
-                code = temp_load_string('./scripts/core/hinge.lua'),
+                code = require('./scripts/core/hinge.lua', 'string'),
             },
             parent = floor,
             local_position = vec2(-((floor_width - 1) * (24 / 12) * 0.5) + ((i - 1) * (24 / 12)), (26 / 12 / 2) + ((j-1) * (24/12)) - (8/12)),
@@ -37,7 +37,7 @@ for i=1,floor_width do
         name = "Image",
         component = {
             name = "Image",
-            code = temp_load_string('./scripts/core/hinge.lua'),
+            code = require('./scripts/core/hinge.lua', 'string'),
         },
         parent = floor,
         local_position = vec2(-((floor_width - 1) * (24 / 12) * 0.5) + ((i - 1) * (24 / 12)), (26 / 12 / 2) - (7 / 12 / 2)),
@@ -51,7 +51,7 @@ for i=1,floor_width do
             name = "Image",
             component = {
                 name = "Image",
-                code = temp_load_string('./scripts/core/hinge.lua'),
+                code = require('./scripts/core/hinge.lua', 'string'),
             },
             parent = floor,
             local_position = vec2(-((floor_width - 1) * (24 / 12) * 0.5) + ((i - 1) * (24 / 12)), -(26 / 12 / 2) - ((j-1) * (18/12)) + (18/12/2) + (1/12)),
@@ -68,7 +68,7 @@ for i=1,floor_width do
                 name = "Point Light",
                 component = {
                     name = "Point Light",
-                    code = temp_load_string('./scripts/core/hinge.lua'),
+                    code = require('./scripts/core/hinge.lua', 'string'),
                 },
                 parent = floor,
                 local_position = vec2(-((floor_width - 1) * (24 / 12) * 0.5) + ((i - 1) * (24 / 12)), j * 5),

@@ -2,7 +2,7 @@ local overlay = Scene:add_attachment({
     name = "Image",
     component = {
         name = "Image",
-        code = temp_load_string('./scripts/core/hinge.lua'),
+        code = require('./scripts/core/hinge.lua', 'string'),
     },
     parent = self,
     local_position = vec2(0, 0),
@@ -26,7 +26,7 @@ function set_overlay_enabled(enabled)
             name = "Image",
             component = {
                 name = "Image",
-                code = temp_load_string('./scripts/core/hinge.lua'),
+                code = require('./scripts/core/hinge.lua', 'string'),
             },
             parent = self,
             local_position = vec2(-9.5/12, 0),

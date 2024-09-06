@@ -32,7 +32,7 @@ local sprite = Scene:add_attachment({
     name = "Image",
     component = {
         name = "Image",
-        code = temp_load_string('./scripts/core/hinge.lua'),
+        code = require('./scripts/core/hinge.lua', 'string'),
     },
     parent = self,
     local_position = vec2(0, 0),
@@ -58,7 +58,7 @@ function on_event(id, data)
         if weapon == nil then
             weapon = Scene:get_object_by_guid(data.guid);
             weapon:temp_set_collides(false);
-            weapon:temp_set_is_static(true);
+            weapon:set_body_type(BodyType.Static);
         end;
     end;
 end;
@@ -116,8 +116,8 @@ function update_weapon()
 end;
 
 function on_update()
-    Scene:temp_set_camera_pos(camera_pos);
-    Scene:temp_set_camera_zoom(camera_zoom);
+    Camera:set_position(camera_pos);
+    Camera:set_orthographic_scale(camera_zoom);
 
     local current_vel = self:get_linear_velocity();
     local update_vel = false;
@@ -170,6 +170,19 @@ function on_update()
             radius = 0.1
         });
         ground:temp_set_collides(false);
+        Scene:add_attachment({
+            name = "Image",
+            component = {
+                name = "Image",
+                code = require('./scripts/core/hinge.lua', 'string'),
+            },
+            parent = ground,
+            local_position = vec2(0, 0),
+            local_angle = 0,
+            image = "~/scripts/@carroted/pylon_recon/assets/textures/pin.png",
+            size = 1 / 12,
+            color = Color:hex(0xffffff),
+        });
 
         weapon_player_joint = Scene:add_hinge_at_world_point({
             point = self:get_position() + vec2(0, -0.114),
@@ -183,7 +196,7 @@ function on_update()
             object_b = weapon,
         });
 
-        weapon:temp_set_is_static(false);
+        weapon:set_body_type(BodyType.Dynamic);
 
         weapon:send_event("@carroted/pylon_recon/weapon/set_overlay_enabled", {
             enabled = true,
@@ -196,7 +209,7 @@ function on_update()
         weapon_player_joint:destroy();
         weapon_player_joint = nil;
         weapon_ground_joint = nil;
-        weapon:temp_set_is_static(true);
+        weapon:set_body_type(BodyType.Static);
         weapon:send_event("@carroted/pylon_recon/weapon/set_overlay_enabled", {
             enabled = false,
         });
@@ -252,8 +265,8 @@ function on_step()
 
     camera_pos = lerp_vec2(camera_pos, self:get_position(), 0.08);
 
-    Scene:temp_set_camera_pos(camera_pos);
-    Scene:temp_set_camera_zoom(camera_zoom);
+    Camera:set_position(camera_pos);
+    Camera:set_orthographic_scale(camera_zoom);
 end;
 
 function ground_check()
