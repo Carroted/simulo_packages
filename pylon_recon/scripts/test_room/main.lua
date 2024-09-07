@@ -86,18 +86,18 @@ for i=1,floor_width do
     end;
 end;
 
-local spawn_small_crate = require('./scripts/@carroted/pylon_recon/lib/spawn_small_crate.lua');
-local spawn_large_crate = require('./scripts/@carroted/pylon_recon/lib/spawn_large_crate.lua');
+local spawn_small_crate = require('./packages/@carroted/pylon_recon/lib/spawn_small_crate.lua');
+local spawn_large_crate = require('./packages/@carroted/pylon_recon/lib/spawn_large_crate.lua');
 
 spawn_small_crate(vec2(-7, -10 + (13/12) + (11/12/2)));
 spawn_large_crate(vec2(-8.15, -10 + (13/12) + (16/12/2)));
 spawn_small_crate(vec2(-7.8, -10 + (13/12) + (16/12) + (11/12/2)));
 
-local spawn_pylon = require('./scripts/@carroted/pylon_recon/lib/spawn_pylon.lua');
+local spawn_pylon = require('./packages/@carroted/pylon_recon/lib/spawn_pylon.lua');
 spawn_pylon(vec2(-2.5, -10 + 0.5 + (13/12)));
 
-local spawn_flingstick = require('./scripts/@carroted/pylon_recon/lib/spawn_flingstick.lua');
+local spawn_flingstick = require('./packages/@carroted/pylon_recon/lib/spawn_flingstick.lua');
 spawn_flingstick(vec2(2, -10 + (13/12) + (5/12/2)));
 
-local spawn_gun = require('./scripts/@carroted/pylon_recon/lib/spawn_gun.lua');
+local spawn_gun = require('./packages/@carroted/pylon_recon/lib/spawn_gun.lua');
 spawn_gun(vec2(4, -10 + (13/12) + (5/12/2)));

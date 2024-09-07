@@ -19,7 +19,7 @@ local function spawn_pylon(pos)
         name = "Pylon",
         id = "@carroted/pylon_recon/pylon",
         version = "0.1.0",
-        code = require('./scripts/@carroted/pylon_recon/pylon.lua', 'string')
+        code = require('./packages/@carroted/pylon_recon/lib/pylon.lua', 'string')
     });
 
     pylon:add_component(hash);

@@ -24,7 +24,7 @@ local function spawn_gun(pos)
         name = "Weapon",
         id = "@carroted/pylon_recon/weapon",
         version = "0.1.0",
-        code = require('./scripts/@carroted/pylon_recon/weapon.lua', 'string')
+        code = require('./packages/@carroted/pylon_recon/lib/weapon.lua', 'string')
     });
 
     gun:add_component(hash);
