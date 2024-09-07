@@ -10,12 +10,12 @@ local function spawn_flingstick(pos)
         name = "Image",
         component = {
             name = "Image",
-            code = require('./scripts/core/hinge.lua', 'string'),
+            code = nil,
         },
         parent = flingstick,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "~/scripts/@carroted/pylon_recon/assets/textures/weapons/flingstick.png",
+        image = "~/packages/@carroted/pylon_recon/assets/textures/weapons/flingstick.png",
         size = 1 / 12,
         color = Color:hex(0xffffff),
     });

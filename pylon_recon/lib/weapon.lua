@@ -2,12 +2,12 @@ local overlay = Scene:add_attachment({
     name = "Image",
     component = {
         name = "Image",
-        code = require('./scripts/core/hinge.lua', 'string'),
+        code = nil,
     },
     parent = self,
     local_position = vec2(0, 0),
     local_angle = 0,
-    image = "~/scripts/@carroted/pylon_recon/assets/textures/weapons/flingstick_overlay.png",
+    image = "~/packages/@carroted/pylon_recon/assets/textures/weapons/flingstick_overlay.png",
     size = 1 / 12,
     color = Color:rgba(0,0,0,0),
 });
@@ -26,12 +26,12 @@ function set_overlay_enabled(enabled)
             name = "Image",
             component = {
                 name = "Image",
-                code = require('./scripts/core/hinge.lua', 'string'),
+                code = nil,
             },
             parent = self,
             local_position = vec2(-9.5/12, 0),
             local_angle = 0,
-            image = "~/scripts/@carroted/pylon_recon/assets/textures/weapons/flingstick_overlay.png",
+            image = "~/packages/@carroted/pylon_recon/assets/textures/weapons/flingstick_overlay.png",
             size = 1 / 12,
             color = Color:rgba(0,0,0,0),
             light = {

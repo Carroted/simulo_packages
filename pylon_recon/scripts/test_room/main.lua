@@ -22,12 +22,12 @@ for i=1,floor_width do
             name = "Image",
             component = {
                 name = "Image",
-                code = require('./scripts/core/hinge.lua', 'string'),
+                code = nil,
             },
             parent = floor,
             local_position = vec2(-((floor_width - 1) * (24 / 12) * 0.5) + ((i - 1) * (24 / 12)), (26 / 12 / 2) + ((j-1) * (24/12)) - (8/12)),
             local_angle = 0,
-            image = "~/scripts/@carroted/pylon_recon/assets/textures/wall.png",
+            image = "~/packages/@carroted/pylon_recon/assets/textures/wall.png",
             size = 1 / 12,
             color = Color:hex(0xcfcfcf),
         });
@@ -37,12 +37,12 @@ for i=1,floor_width do
         name = "Image",
         component = {
             name = "Image",
-            code = require('./scripts/core/hinge.lua', 'string'),
+            code = nil,
         },
         parent = floor,
         local_position = vec2(-((floor_width - 1) * (24 / 12) * 0.5) + ((i - 1) * (24 / 12)), (26 / 12 / 2) - (7 / 12 / 2)),
         local_angle = 0,
-        image = "~/scripts/@carroted/pylon_recon/assets/textures/floor_top.png",
+        image = "~/packages/@carroted/pylon_recon/assets/textures/floor_top.png",
         size = 1 / 12,
         color = Color:hex(0xffffff),
     });
@@ -51,12 +51,12 @@ for i=1,floor_width do
             name = "Image",
             component = {
                 name = "Image",
-                code = require('./scripts/core/hinge.lua', 'string'),
+                code = nil,
             },
             parent = floor,
             local_position = vec2(-((floor_width - 1) * (24 / 12) * 0.5) + ((i - 1) * (24 / 12)), -(26 / 12 / 2) - ((j-1) * (18/12)) + (18/12/2) + (1/12)),
             local_angle = 0,
-            image = "~/scripts/@carroted/pylon_recon/assets/textures/floor_bottom.png",
+            image = "~/packages/@carroted/pylon_recon/assets/textures/floor_bottom.png",
             size = 1 / 12,
             color = Color:hex(0xffffff),
         });
@@ -68,7 +68,7 @@ for i=1,floor_width do
                 name = "Point Light",
                 component = {
                     name = "Point Light",
-                    code = require('./scripts/core/hinge.lua', 'string'),
+                    code = nil,
                 },
                 parent = floor,
                 local_position = vec2(-((floor_width - 1) * (24 / 12) * 0.5) + ((i - 1) * (24 / 12)), j * 5),

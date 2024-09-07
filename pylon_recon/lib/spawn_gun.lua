@@ -10,12 +10,12 @@ local function spawn_gun(pos)
         name = "Image",
         component = {
             name = "Image",
-            code = require('./scripts/core/hinge.lua', 'string'),
+            code = nil,
         },
         parent = gun,
         local_position = vec2(0, 1/12),
         local_angle = 0,
-        image = "~/scripts/@carroted/pylon_recon/assets/textures/weapons/gun.png",
+        image = "~/packages/@carroted/pylon_recon/assets/textures/weapons/gun.png",
         size = 1 / 12,
         color = Color:hex(0xffffff),
     });
