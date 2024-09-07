@@ -13,7 +13,7 @@ local camera_zoom = 0.02;
 
 -- Imports
 
-require './scripts/@carroted/pylon_recon/lib/gizmos.lua';
+require './packages/@carroted/pylon_recon/lib/gizmos.lua';
 
 local weapon_offset = vec2(1.232, 0);
 local weapon_cooldown = 0;
