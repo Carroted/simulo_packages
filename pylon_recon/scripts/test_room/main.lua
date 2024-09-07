@@ -93,11 +93,17 @@ spawn_small_crate(vec2(-7, -10 + (13/12) + (11/12/2)));
 spawn_large_crate(vec2(-8.15, -10 + (13/12) + (16/12/2)));
 spawn_small_crate(vec2(-7.8, -10 + (13/12) + (16/12) + (11/12/2)));
 
+local spawn_nojump = require('./packages/@carroted/pylon_recon/lib/spawn_nojump.lua');
+spawn_nojump(vec2(5, -10 + (13/12) + (((13/12) + (13/12) + (3)) / 2)), 5, false);
+spawn_nojump(vec2(5, -10 + (13/12) + (((13/12) + (13/12) + (3)) * 2)), 5, false);
+
 local spawn_pylon = require('./packages/@carroted/pylon_recon/lib/spawn_pylon.lua');
 spawn_pylon(vec2(-2.5, -10 + 0.5 + (13/12)));
 
 local spawn_flingstick = require('./packages/@carroted/pylon_recon/lib/spawn_flingstick.lua');
 spawn_flingstick(vec2(2, -10 + (13/12) + (5/12/2)));
 
+--[[
 local spawn_gun = require('./packages/@carroted/pylon_recon/lib/spawn_gun.lua');
 spawn_gun(vec2(4, -10 + (13/12) + (5/12/2)));
+]]

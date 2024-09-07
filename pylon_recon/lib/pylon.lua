@@ -21,6 +21,9 @@ local weapon = nil;
 local weapon_player_joint = nil;
 local weapon_ground_joint = nil;
 local ground = nil;
+local weapon_blocking_movement = false;
+
+local inventory = {};
 
 -- Physics and Rendering Setup
 
@@ -51,6 +54,45 @@ end;
 
 redraw_sprite();
 
+function switch_to_flingstick()
+    if inventory["flingstick"] == nil then return; end;
+    
+    if weapon ~= nil then
+        weapon:destroy();
+        weapon = nil;
+    end;
+
+    local spawn_flingstick = require('./packages/@carroted/pylon_recon/lib/spawn_flingstick.lua');
+    local flingstick = spawn_flingstick(self:get_position());
+
+    weapon = flingstick;
+    weapon:temp_set_collides(false);
+    weapon:set_body_type(BodyType.Static);
+end;
+
+function switch_to_none()
+    if weapon_player_joint ~= nil then
+        weapon_player_joint:destroy();
+        weapon_player_joint = nil;
+        weapon_ground_joint = nil;
+    end;
+
+    if weapon ~= nil then
+        weapon:send_event("@carroted/pylon_recon/weapon/set_overlay_enabled", {
+            enabled = false,
+        });
+        weapon:destroy();
+        weapon = nil;
+    end;
+    if ground ~= nil then
+        ground:destroy();
+    end;
+    ground = nil;
+
+    weapon_ground_joint = nil;
+    weapon_blocking_movement = false;
+end;
+
 -- Events
 
 function on_event(id, data)
@@ -59,7 +101,11 @@ function on_event(id, data)
             weapon = Scene:get_object_by_guid(data.guid);
             weapon:temp_set_collides(false);
             weapon:set_body_type(BodyType.Static);
+        else
+            Scene:get_object_by_guid(data.guid):destroy();
         end;
+        print(data.weapon.id);
+        inventory[data.weapon.id] = true;
     end;
 end;
 
@@ -122,6 +168,13 @@ function on_update()
     local current_vel = self:get_linear_velocity();
     local update_vel = false;
 
+    if Input:key_just_pressed("1") then
+        switch_to_none();
+    end;
+    if Input:key_just_pressed("2") then
+        switch_to_flingstick();
+    end;
+
     if Input:key_just_pressed("Q") then
         debug = not debug;
     end;
@@ -156,7 +209,7 @@ function on_update()
         end;
     end;
 
-    if update_vel then
+    if update_vel and (not weapon_blocking_movement) then
         self:set_linear_velocity(current_vel);
     end;
 
@@ -201,6 +254,8 @@ function on_update()
         weapon:send_event("@carroted/pylon_recon/weapon/set_overlay_enabled", {
             enabled = true,
         });
+
+        weapon_blocking_movement = true;
     end;
 
     if (Input:pointer_just_released()) and (weapon_player_joint ~= nil) then
@@ -213,6 +268,7 @@ function on_update()
         weapon:send_event("@carroted/pylon_recon/weapon/set_overlay_enabled", {
             enabled = false,
         });
+        weapon_blocking_movement = false;
     end;
 end;
 
@@ -276,13 +332,21 @@ function ground_check()
             position = circles[i],
             radius = 0,
         });
-        if #circle > 0 then return true; end;
+        for i=1,#circle do
+            if circle[i]:get_name() ~= "nojump" then
+                return true;
+            end;
+        end;
     end;
 
     local rays = get_ground_check_rays();
     for i=1,#rays do
         local hits = Scene:raycast(rays[i]);
-        if #hits > 0 then return true; end;
+        for i=1,#hits do
+            if hits[i].object:get_name() ~= "nojump" then
+                return true;
+            end;
+        end;
     end;
 
     return false;

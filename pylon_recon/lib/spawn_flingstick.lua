@@ -28,6 +28,8 @@ local function spawn_flingstick(pos)
     });
 
     flingstick:add_component(hash);
+
+    return flingstick;
 end;
 
 return spawn_flingstick;
