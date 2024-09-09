@@ -188,6 +188,7 @@ function on_update()
                 right_eye:temp_set_collides(false);
                 left_eye:set_body_type(BodyType.Static);
                 right_eye:set_body_type(BodyType.Static);
+                camera_pos = self:get_position() + vec2(0, 0.8);
             else
                 left_eye:set_position(self:get_position() + vec2(-1.8 * 0.0625, (10 * 0.0625)));
                 right_eye:set_position(self:get_position() + vec2(1.8 * 0.0625, (10 * 0.0625)));

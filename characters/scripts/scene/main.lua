@@ -35,7 +35,6 @@ function spawn_mike(position)
         position = position + vec2(-0.054, 0.67),
         is_static = false, 
     });
-    eye1:temp_set_collides(false);
     eye1:set_density(0.1);
 
     local eye2 = Scene:add_circle({
@@ -44,25 +43,10 @@ function spawn_mike(position)
         position = position + vec2(0.128, 0.67),
         is_static = false,
     });
-    eye2:temp_set_collides(false);
     eye2:set_density(0.1);
 
-    local hinge1 = Scene:add_hinge_at_world_point({
-        point = position + vec2(-0.054, 0.67),
-        object_a = head,
-        object_b = eye1,
-        motor_enabled = true,
-        motor_speed = 0, -- radians per second
-        max_motor_torque = 1.25, -- maximum torque for the motor, in newton-meters
-    });
-    local hinge2 = Scene:add_hinge_at_world_point({
-        point = position + vec2(0.128, 0.67),
-        object_a = head,
-        object_b = eye2,
-        motor_enabled = true,
-        motor_speed = 0, -- radians per second
-        max_motor_torque = 1.25, -- maximum torque for the motor, in newton-meters
-    });
+    eye1:bolt_to(head);
+    eye2:bolt_to(head);
 
     local capsule1 = Scene:add_capsule({
         color = Color:hex(0x6f6773),
@@ -72,7 +56,7 @@ function spawn_mike(position)
         local_point_b = vec2(0.59225, 0.284),
         is_static = false,
     });
-    local hinge3 = Scene:add_hinge_at_world_point({
+    local hinge1 = Scene:add_hinge_at_world_point({
         point = position + vec2(0.172, 0.284),
         object_a = body,
         object_b = capsule1,
@@ -88,7 +72,7 @@ function spawn_mike(position)
         local_point_b = vec2(1.0125, 0.284),
         is_static = false,
     });
-    local hinge4 = Scene:add_hinge_at_world_point({
+    local hinge2 = Scene:add_hinge_at_world_point({
         point = position + vec2(0.59225, 0.284),
         object_a = capsule1,
         object_b = capsule2,
@@ -110,7 +94,7 @@ function spawn_mike(position)
         },
         is_static = false,
     });
-    local hinge4 = Scene:add_hinge_at_world_point({
+    local hinge3 = Scene:add_hinge_at_world_point({
         point = position + vec2(1.0125, 0.284),
         object_a = capsule2,
         object_b = polygon1,
@@ -126,7 +110,7 @@ function spawn_mike(position)
     });
     end_box:add_component(hash);
 
-    local hinge5 = Scene:add_hinge_at_world_point({
+    local hinge4 = Scene:add_hinge_at_world_point({
         point = position + vec2(1.27015, 0.284),
         object_a = polygon1,
         object_b = end_box,
@@ -240,7 +224,6 @@ function spawn_moderizer(position)
         position = position + vec2(-0.102, 0.6707),
         is_static = false, 
     });
-    eye1:temp_set_collides(false);
     eye1:set_density(0.1);
 
     local eye2 = Scene:add_circle({
@@ -249,47 +232,15 @@ function spawn_moderizer(position)
         position = position + vec2(0.102, 0.6707),
         is_static = false,
     });
-    eye2:temp_set_collides(false);
     eye2:set_density(0.1);
 
-    local hinge1 = Scene:add_hinge_at_world_point({
-        point = position + vec2(-0.102, 0.6707),
-        object_a = head,
-        object_b = eye1,
-        motor_enabled = true,
-        motor_speed = 0, -- radians per second
-        max_motor_torque = 1.25, -- maximum torque for the motor, in newton-meters
-    });
-    local hinge2 = Scene:add_hinge_at_world_point({
-        point = position + vec2(0.102, 0.6707),
-        object_a = head,
-        object_b = eye2,
-        motor_enabled = true,
-        motor_speed = 0, -- radians per second
-        max_motor_torque = 1.25, -- maximum torque for the motor, in newton-meters
-    });
+    eye1:bolt_to(head);
+    eye2:bolt_to(head);
 
     local hexagons = add_empire_icon(position + vec2(-0.115, 0.175), 0.032, Color:hex(0x96352b));
     for i=1,#hexagons do
-        hexagons[i]:temp_set_collides(false);
-        Scene:add_hinge_at_world_point({
-            point = hexagons[i]:get_position() + vec2(-0.05, 0),
-            object_a = body,
-            object_b = hexagons[i],
-            motor_enabled = false,
-            motor_speed = 0,
-            max_motor_torque = 0.02,
-        });
-        Scene:add_hinge_at_world_point({
-            point = hexagons[i]:get_position() + vec2(0.05, 0),
-            object_a = body,
-            object_b = hexagons[i],
-            motor_enabled = false,
-            motor_speed = 0,
-            max_motor_torque = 0.02,
-        });
+        hexagons[i]:bolt_to(body);
     end;
-    print("did it for " .. tostring(#hexagons) .. " hexagons")
 end;
 
 spawn_moderizer(vec2(4, -9.7));
@@ -318,26 +269,164 @@ function spawn_emperor(position)
 
     local hexagons = add_empire_icon(head:get_position(), 0.088, Color:hex(0xb85b37));
     for i=1,#hexagons do
-        hexagons[i]:temp_set_collides(false);
         hexagons[i]:set_density(0.1);
-        Scene:add_hinge_at_world_point({
-            point = hexagons[i]:get_position() + vec2(-0.05, 0),
-            object_a = head,
-            object_b = hexagons[i],
-            motor_enabled = false,
-            motor_speed = 0,
-            max_motor_torque = 0.02,
-        });
-        Scene:add_hinge_at_world_point({
-            point = hexagons[i]:get_position() + vec2(0.05, 0),
-            object_a = head,
-            object_b = hexagons[i],
-            motor_enabled = false,
-            motor_speed = 0,
-            max_motor_torque = 0.02,
-        });
+        hexagons[i]:bolt_to(head);
     end;
     print("did it for " .. tostring(#hexagons) .. " hexagons");
+
+    local armor_color = Color:hex(0x565059);
+
+    local right_part1 = Scene:add_capsule({
+        position = position,
+        local_point_a = vec2(0.48, 1.085),
+        local_point_b = vec2(0.48, 1.7),
+        color = armor_color,
+        is_static = false,
+        radius = 0.075,
+    });
+    right_part1:bolt_to(body);
+    local part2 = Scene:add_capsule({
+        position = position,
+        local_point_a = vec2(0.48, 1.7),
+        local_point_b = vec2(0.38, 1.92),
+        color = armor_color,
+        is_static = false,
+        radius = 0.075,
+    });
+    part2:bolt_to(body);
+    local part3 = Scene:add_capsule({
+        position = position,
+        local_point_a = vec2(0.38, 1.92),
+        local_point_b = vec2(0.36, 1.94),
+        color = armor_color,
+        is_static = false,
+        radius = 0.075,
+    });
+
+    part3:bolt_to(body);
+
+    Scene:add_hinge_at_world_point({
+        object_a = part3,
+        object_b = Scene:add_circle({
+            position = position + vec2(0.36, 1.94),
+            color = Color:rgba(0,0,0,0),
+            is_static = false,
+            radius = 0.075,
+        }),
+        point = position + vec2(0.36, 1.94),
+        motor_enabled = true,
+        motor_speed = 0, -- radians per second
+        max_motor_torque = 1.25,
+    });
+
+    local left_part1 = Scene:add_capsule({
+        position = position,
+        local_point_a = vec2(-0.48, 1.085),
+        local_point_b = vec2(-0.48, 1.7),
+        color = armor_color,
+        is_static = false,
+        radius = 0.075,
+    });
+    left_part1:bolt_to(body);
+    local part2 = Scene:add_capsule({
+        position = position,
+        local_point_a = vec2(-0.48, 1.7),
+        local_point_b = vec2(-0.38, 1.92),
+        color = armor_color,
+        is_static = false,
+        radius = 0.075,
+    });
+    part2:bolt_to(body);
+    local part3 = Scene:add_capsule({
+        position = position,
+        local_point_a = vec2(-0.38, 1.92),
+        local_point_b = vec2(-0.36, 1.94),
+        color = armor_color,
+        is_static = false,
+        radius = 0.075,
+    });
+
+    part3:bolt_to(body);
+
+    Scene:add_hinge_at_world_point({
+        object_a = part3,
+        object_b = Scene:add_circle({
+            position = position + vec2(-0.36, 1.94),
+            color = Color:rgba(0,0,0,0),
+            is_static = false,
+            radius = 0.075,
+        }),
+        point = position + vec2(-0.36, 1.94),
+        motor_enabled = true,
+        motor_speed = 0, -- radians per second
+        max_motor_torque = 1.25,
+    });
+
+    local right_laser_box = Scene:add_box({
+        position = position + vec2(0.13 + 0.48, 0.19 + 1.3925),
+        size = vec2(0.47, 252 * (0.47 / 512)),
+        color = Color:rgba(0,0,0,0),
+        is_static = false,
+    });
+
+    Scene:add_attachment({
+        name = "Image",
+        component = {
+            name = "Image",
+            code = nil,
+        },
+        parent = right_laser_box,
+        local_position = vec2(0.13 + 0.48, 0.2425),
+        local_angle = 0,
+        image = "~/packages/@carroted/characters/assets/emperor_laser.png",
+        size = 0.47 / 512,
+        color = Color:hex(0xffffff),
+    });
+
+    right_laser_box:bolt_to(right_part1);
+
+    local hash = Scene:add_component({
+        name = "Emperor Laser",
+        id = "@carroted/characters/emperor_laser",
+        version = "0.1.0",
+        code = require('./packages/@carroted/characters/lib/emperor_laser.lua', 'string')
+    });
+
+    right_laser_box:add_component(hash);
+
+    local left_laser_box = Scene:add_box({
+        position = position + vec2(-0.13 - 0.48, 0.19 + 1.3925 + 2),
+        size = vec2(0.47, 252 * (0.47 / 512)),
+        color = Color:rgba(0,0,0,0),
+        is_static = false,
+    });
+
+    left_laser_box:set_angle(math.rad(180));
+
+    Scene:add_attachment({
+        name = "Image",
+        component = {
+            name = "Image",
+            code = nil,
+        },
+        parent = left_laser_box,
+        local_position = vec2(0, 0),
+        local_angle = 0,
+        image = "~/packages/@carroted/characters/assets/emperor_laser.png",
+        size = 0.47 / 512,
+        color = Color:hex(0xffffff),
+    });
+
+    --left_laser_box:bolt_to(left_part1);
+
+    local hash = Scene:add_component({
+        name = "Emperor Laser",
+        id = "@carroted/characters/emperor_laser",
+        version = "0.1.0",
+        code = require('./packages/@carroted/characters/lib/emperor_laser.lua', 'string')
+    });
+
+    left_laser_box:add_component(hash);
 end;
 
 spawn_emperor(vec2(6, -10.9));
