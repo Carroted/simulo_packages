@@ -1,7 +1,9 @@
 local speed = 3;
+local default_speed = 3;
 
 local ball = nil;
 local ball_power = 1;
+local ball_default_power = 1;
 local ball_light_intensity = 1;
 local ball_restitution = 1;
 local ball_attachment = nil;
@@ -215,6 +217,9 @@ function on_update()
         ball_power *= 2;
         ball_restitution += 0.15;
         ball_light_intensity *= 10;
+        speed += 1;
+        default_speed += 0.2;
+        ball_default_power *= 1.1;
         ball:set_restitution(ball_restitution);
         if ball_attachment ~= nil then
             ball_attachment:destroy();
@@ -251,6 +256,7 @@ function on_update()
         computer_score += ball_power;
         set_computer_display(computer_score);
         reset_ball_power();
+        speed = default_speed;
     end;
 
     if ball_pos.y > (6.8 / 2) then
@@ -264,6 +270,7 @@ function on_update()
         player_score += ball_power;
         set_player_display(player_score);
         reset_ball_power();
+        speed = default_speed;
     end;
 
     if hit_first_time then
@@ -303,9 +310,9 @@ function on_step()
 end;
 
 function reset_ball_power()
-    ball_power = 1;
-    ball_restitution = 1;
-    ball_light_intensity = 1;
+    ball_power = ball_default_power;
+    ball_restitution = ball_default_power;
+    ball_light_intensity = ball_default_power;
     ball:set_restitution(ball_restitution);
     if ball_attachment ~= nil then
         ball_attachment:destroy();
