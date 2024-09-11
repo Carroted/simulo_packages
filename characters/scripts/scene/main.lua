@@ -376,7 +376,7 @@ function spawn_emperor(position)
             code = nil,
         },
         parent = right_laser_box,
-        local_position = vec2(0.13 + 0.48, 0.2425),
+        local_position = vec2(0, 0),
         local_angle = 0,
         image = "~/packages/@carroted/characters/assets/emperor_laser.png",
         size = 0.47 / 512,
@@ -395,13 +395,14 @@ function spawn_emperor(position)
     right_laser_box:add_component(hash);
 
     local left_laser_box = Scene:add_box({
-        position = position + vec2(-0.13 - 0.48, 0.19 + 1.3925 + 2),
+        position = position + vec2(-0.13 - 0.48, 0.19 + 1.3925),
         size = vec2(0.47, 252 * (0.47 / 512)),
         color = Color:rgba(0,0,0,0),
         is_static = false,
     });
 
     left_laser_box:set_angle(math.rad(180));
+    left_laser_box:bolt_to(left_part1);
 
     Scene:add_attachment({
         name = "Image",

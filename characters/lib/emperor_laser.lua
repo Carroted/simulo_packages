@@ -98,7 +98,7 @@ function on_step()
     local angle = self:get_angle();
     local direction = self:get_right_direction();
 
-    local origin = self:get_world_point(vec2(0, 0));
+    local origin = self:get_world_point(vec2(0.47 / 2, 0));
 
     local hits = Scene:raycast({
         origin = origin,
@@ -243,8 +243,6 @@ function on_step()
             });
         end;
     end;
-
-    if true then return; end;
 
     for i=1,#hits do
         hit_target(hits[i].object, hits[i].point)
