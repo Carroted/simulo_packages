@@ -17,7 +17,7 @@ local function spawn_small_crate(pos)
         parent = crate,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "~/packages/@carroted/pylon_recon/assets/textures/crate_small.png",
+        image = "./packages/@carroted/pylon_recon/assets/textures/crate_small.png",
         size = 1 / 12,
         color = Color:hex(0xffffff),
     });

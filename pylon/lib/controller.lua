@@ -30,7 +30,7 @@ function on_event(id, data)
         left_eye:set_body_type(BodyType.Static);
         right_eye:set_body_type(BodyType.Static);
 
-        update_health_bar(hp);
+        --update_health_bar(hp);
     end;
 end;
 
@@ -104,7 +104,7 @@ function update_health_bar(value)
                 parent = health_bar_fg,
                 local_position = vec2((((i - 0.5) / 10) * health_bar_width) - (health_bar_width / 2), 0),
                 local_angle = 0,
-                image = "embedded://textures/point_light.png",
+                image = "./packages/core/assets/textures/point_light.png",
                 size = 0.001,
                 color = Color:rgba(0,0,0,0),
                 light = {
@@ -170,7 +170,7 @@ function line(line_start,line_end,thickness,color,static)
 end;
 
 function on_update()
-    if Input:key_just_pressed("R") then
+    if Input:key_just_pressed("R") and false then
         require('./packages/@carroted/pylon/scripts/demo/main.lua');
         return;
     end;
@@ -200,7 +200,7 @@ function on_update()
                 right_eye:bolt_to(self);
             end;
 
-            update_health_bar(hp);
+            --update_health_bar(hp);
         end;
     end;
 
@@ -210,13 +210,8 @@ function on_update()
 
     if not enabled then return; end;
 
-    if health_bar_fg ~= nil then
-        health_bar_fg:set_position(health_fg_pos(100));
-    end;
-    health_bar_bg:set_position(health_bg_pos(100));
-
-    Camera:set_position(camera_pos);
-    Camera:set_orthographic_scale(camera_zoom);
+    --Camera:set_position(camera_pos);
+    --Camera:set_orthographic_scale(camera_zoom);
 
     local current_vel = self:get_linear_velocity();
     local update_vel = false;
@@ -288,10 +283,12 @@ function on_step()
         if health_bar_fg ~= nil then
             health_bar_fg:set_position(health_fg_pos(hp));
         end;
-        health_bar_bg:set_position(health_bg_pos(hp));
+        if health_bar_bg ~= nil then
+            health_bar_bg:set_position(health_bg_pos(hp));
+        end;
 
-        Camera:set_position(camera_pos);
-        Camera:set_orthographic_scale(camera_zoom);
+        --Camera:set_position(camera_pos);
+        --Camera:set_orthographic_scale(camera_zoom);
 
         local left_eye_pos = self_pos + vec2(-1.8 * 0.0625, (10 * 0.0625));
         local right_eye_pos = self_pos + vec2(1.8 * 0.0625, (10 * 0.0625));

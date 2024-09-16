@@ -40,7 +40,7 @@ local sprite = Scene:add_attachment({
     parent = self,
     local_position = vec2(0, 0),
     local_angle = 0,
-    image = "~/packages/@carroted/pylon_recon/assets/textures/entities/cone.png",
+    image = "./packages/@carroted/pylon_recon/assets/textures/entities/cone.png",
     size = 1 / 12,
     color = Color:hex(0xffffff),
     flip_x = facing_left,
@@ -232,7 +232,7 @@ function on_update()
             parent = ground,
             local_position = vec2(0, 0),
             local_angle = 0,
-            image = "~/packages/@carroted/pylon_recon/assets/textures/pin.png",
+            image = "./packages/@carroted/pylon_recon/assets/textures/pin.png",
             size = 1 / 12,
             color = Color:hex(0xffffff),
         });

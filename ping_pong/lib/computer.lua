@@ -1,9 +1,7 @@
 local speed = 3;
-local default_speed = 3;
 
 local ball = nil;
 local ball_power = 1;
-local ball_default_power = 1;
 local ball_light_intensity = 1;
 local ball_restitution = 1;
 local ball_attachment = nil;
@@ -20,7 +18,7 @@ function on_event(id, data)
             parent = ball,
             local_position = vec2(0, 0),
             local_angle = 0,
-            image = "embedded://textures/point_light.png",
+            image = "./packages/core/assets/textures/point_light.png",
             size = 0.001,
             color = Color:rgba(0,0,0,0),
             light = {
@@ -110,12 +108,59 @@ local digits = {
         {true, true, true},
         {false, false, false},
         {false, false, false},
-    }
+    },
+    ['.'] = {
+        {false, false, false},
+        {false, false, false},
+        {false, false, false},
+        {false, false, false},
+        {false, true, false},
+    },
+    ['e'] = {
+        {true, true, true},
+        {true, false, false},
+        {true, true, true},
+        {true, false, false},
+        {true, true, true},
+    },
+    ['+'] = {
+        {false, false, false},
+        {false, true, false},
+        {true, true, true},
+        {false, true, false},
+        {false, false, false},
+    },
+    ['i'] = {
+        {false, true, false},
+        {false, false, false},
+        {false, true, false},
+        {false, true, false},
+        {false, true, false},
+    },
+    ['n'] = {
+        {false, false, false},
+        {false, false, false},
+        {true, true, true},
+        {true, false, true},
+        {true, false, true},
+    },
+    ['f'] = {
+        {false, true, true},
+        {true, false, false},
+        {true, true, true},
+        {true, false, false},
+        {true, false, false},
+    },
 }
 
 local function draw_digit(pos, size, color, digit)
     local digit_pattern = digits[digit]
     local objects = {}
+
+    if digit_pattern == nil then
+        print('digit was ' .. digit);
+        return {};
+    end;
 
     for y = 1, #digit_pattern do
         for x = 1, #digit_pattern[y] do
@@ -142,6 +187,7 @@ end
 local function draw_seven_segment_display(pos, size, color, number)
     local objects = {}
     local num_str = tostring(number);
+
     pos = pos - (vec2((((#num_str / 2) * 4) - 1) * size, -2 * size)) / 2;
 
     local final_offset = 0;
@@ -176,7 +222,9 @@ local player_display = nil;
 function set_player_display(value)
     if player_display ~= nil then
         for _, data in ipairs(player_display) do
-            data.obj:destroy();
+            if not data.obj:is_destroyed() then
+                data.obj:destroy();
+            end;
         end;
     end;
     player_display = draw_seven_segment_display(vec2(0, -1.7), 0.15, Color:rgba(215,215,215,255), value);
@@ -186,7 +234,9 @@ end;
 function set_computer_display(value)
     if computer_display ~= nil then
         for _, data in ipairs(computer_display) do
-            data.obj:destroy();
+            if not data.obj:is_destroyed() then
+                data.obj:destroy();
+            end;
         end;
     end;
     computer_display = draw_seven_segment_display(vec2(0, 1.7), 0.15, Color:rgba(215,215,215,255), value);
@@ -217,9 +267,6 @@ function on_update()
         ball_power *= 2;
         ball_restitution += 0.15;
         ball_light_intensity *= 10;
-        speed += 1;
-        default_speed += 0.2;
-        ball_default_power *= 1.1;
         ball:set_restitution(ball_restitution);
         if ball_attachment ~= nil then
             ball_attachment:destroy();
@@ -233,7 +280,7 @@ function on_update()
             parent = ball,
             local_position = vec2(0, 0),
             local_angle = 0,
-            image = "embedded://textures/point_light.png",
+            image = "./packages/core/assets/textures/point_light.png",
             size = 0.001,
             color = Color:rgba(0,0,0,0),
             light = {
@@ -256,7 +303,6 @@ function on_update()
         computer_score += ball_power;
         set_computer_display(computer_score);
         reset_ball_power();
-        speed = default_speed;
     end;
 
     if ball_pos.y > (6.8 / 2) then
@@ -270,7 +316,6 @@ function on_update()
         player_score += ball_power;
         set_player_display(player_score);
         reset_ball_power();
-        speed = default_speed;
     end;
 
     if hit_first_time then
@@ -310,9 +355,9 @@ function on_step()
 end;
 
 function reset_ball_power()
-    ball_power = ball_default_power;
-    ball_restitution = ball_default_power;
-    ball_light_intensity = ball_default_power;
+    ball_power = 1;
+    ball_restitution = 1;
+    ball_light_intensity = 1;
     ball:set_restitution(ball_restitution);
     if ball_attachment ~= nil then
         ball_attachment:destroy();
@@ -326,7 +371,7 @@ function reset_ball_power()
         parent = ball,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "embedded://textures/point_light.png",
+        image = "./packages/core/assets/textures/point_light.png",
         size = 0.001,
         color = Color:rgba(0,0,0,0),
         light = {

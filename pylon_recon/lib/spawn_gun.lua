@@ -15,7 +15,7 @@ local function spawn_gun(pos)
         parent = gun,
         local_position = vec2(0, 1/12),
         local_angle = 0,
-        image = "~/packages/@carroted/pylon_recon/assets/textures/weapons/gun.png",
+        image = "./packages/@carroted/pylon_recon/assets/textures/weapons/gun.png",
         size = 1 / 12,
         color = Color:hex(0xffffff),
     });

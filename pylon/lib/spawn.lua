@@ -81,7 +81,7 @@ local function spawn_pylon(spawn_offset, light, permanent_controller)
         parent = left_eye,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "embedded://textures/point_light.png",
+        image = "./packages/core/assets/textures/point_light.png",
         size = 0.001,
         color = Color:rgba(0,0,0,0),
         light = {
@@ -100,7 +100,7 @@ local function spawn_pylon(spawn_offset, light, permanent_controller)
         parent = left_eye,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "embedded://textures/point_light.png",
+        image = "./packages/core/assets/textures/point_light.png",
         size = 0.001,
         color = Color:rgba(0,0,0,0),
         light = {
@@ -129,7 +129,7 @@ local function spawn_pylon(spawn_offset, light, permanent_controller)
         parent = right_eye,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "embedded://textures/point_light.png",
+        image = "./packages/core/assets/textures/point_light.png",
         size = 0.001,
         color = Color:rgba(0,0,0,0),
         light = {
@@ -148,7 +148,7 @@ local function spawn_pylon(spawn_offset, light, permanent_controller)
         parent = right_eye,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "embedded://textures/point_light.png",
+        image = "./packages/core/assets/textures/point_light.png",
         size = 0.001,
         color = Color:rgba(0,0,0,0),
         light = {
@@ -250,7 +250,7 @@ local function spawn_pylon(spawn_offset, light, permanent_controller)
             parent = pylon_main,
             local_position = vec2(0, 0),
             local_angle = 0,
-            image = "embedded://textures/point_light.png",
+            image = "./packages/core/assets/textures/point_light.png",
             size = 0.001,
             color = Color:rgba(0,0,0,0),
             light = {

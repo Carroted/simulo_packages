@@ -164,7 +164,7 @@ function on_step()
                 parent = line,
                 local_position = vec2(0, 0),
                 local_angle = 0,
-                image = "embedded://textures/point_light.png",
+                image = "./packages/core/assets/textures/point_light.png",
                 size = 0.001,
                 color = Color:rgba(0,0,0,0),
                 light = {
@@ -183,7 +183,7 @@ function on_step()
                     parent = line,
                     local_position = vec2(0, 0),
                     local_angle = 0,
-                    image = "embedded://textures/point_light.png",
+                    image = "./packages/core/assets/textures/point_light.png",
                     size = 0.001,
                     color = Color:rgba(0,0,0,0),
                     light = {
@@ -219,7 +219,7 @@ function on_step()
             parent = line,
             local_position = vec2(0, 0),
             local_angle = 0,
-            image = "embedded://textures/point_light.png",
+            image = "./packages/core/assets/textures/point_light.png",
             size = 0.001,
             color = Color:rgba(0,0,0,0),
             light = {
@@ -269,7 +269,7 @@ function on_step()
                 parent = c,
                 local_position = vec2(0, 0),
                 local_angle = 0,
-                image = "embedded://textures/point_light.png",
+                image = "./packages/core/assets/textures/point_light.png",
                 size = 0.001,
                 color = Color:rgba(0,0,0,0),
                 light = {

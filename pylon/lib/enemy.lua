@@ -85,7 +85,7 @@ function update_health_bar(value)
             parent = health_bar_fg,
             local_position = vec2((((i - 0.5) / 10) * health_bar_width) - (health_bar_width / 2), 0),
             local_angle = 0,
-            image = "embedded://textures/point_light.png",
+            image = "./packages/core/assets/textures/point_light.png",
             size = 0.001,
             color = Color:rgba(0,0,0,0),
             light = {

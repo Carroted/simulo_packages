@@ -136,7 +136,7 @@ Scene:add_attachment({
     parent = table,
     local_position = vec2(-7 / 2, -8 / 2),
     local_angle = 0,
-    image = "embedded://textures/point_light.png",
+    image = "./packages/core/assets/textures/point_light.png",
     size = 0.0005,
     color = Color:rgba(0,0,0,0),
     light = {
@@ -155,7 +155,7 @@ Scene:add_attachment({
     parent = table,
     local_position = vec2(7 / 2, 8 / 2),
     local_angle = 0,
-    image = "embedded://textures/point_light.png",
+    image = "./packages/core/assets/textures/point_light.png",
     size = 0.0005,
     color = Color:rgba(0,0,0,0),
     light = {

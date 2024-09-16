@@ -378,7 +378,7 @@ function spawn_emperor(position)
         parent = right_laser_box,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "~/packages/@carroted/characters/assets/emperor_laser.png",
+        image = "./packages/@carroted/characters/assets/emperor_laser.png",
         size = 0.47 / 512,
         color = Color:hex(0xffffff),
     });
@@ -413,7 +413,7 @@ function spawn_emperor(position)
         parent = left_laser_box,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "~/packages/@carroted/characters/assets/emperor_laser.png",
+        image = "./packages/@carroted/characters/assets/emperor_laser.png",
         size = 0.47 / 512,
         color = Color:hex(0xffffff),
     });
@@ -622,3 +622,53 @@ nuke:add_component(hash);]]
 local spawn_pylon = require('./packages/@carroted/pylon/lib/spawn.lua');
 
 spawn_pylon(vec2(-2, 0));
+
+local mike_axe_width = 641;
+local mike_axe_height = 1251;
+local mike_axe_size = 0.75;
+
+local mike_axe = Scene:add_box({
+    position = vec2(-5, 0),
+    size = vec2(0.14, mike_axe_height * (mike_axe_size / mike_axe_width)),
+    color = Color:rgba(0,0,0,0),
+    is_static = false,
+});
+
+Scene:add_attachment({
+    name = "Image",
+    component = {
+        name = "Image",
+        code = nil,
+    },
+    parent = mike_axe,
+    local_position = vec2(0.07, 0),
+    local_angle = 0,
+    image = "./packages/@carroted/characters/assets/mike_axe.png",
+    size = mike_axe_size / mike_axe_width,
+    color = Color:hex(0xffffff),
+});
+
+local bottle_width = 679;
+local bottle_height = 1500;
+local bottle_size = 0.2;
+
+local bottle = Scene:add_box({
+    position = vec2(-5, 0),
+    size = vec2(bottle_size, bottle_height * (bottle_size / bottle_width)),
+    color = Color:rgba(0,0,0,0),
+    is_static = false,
+});
+
+Scene:add_attachment({
+    name = "Image",
+    component = {
+        name = "Image",
+        code = nil,
+    },
+    parent = bottle,
+    local_position = vec2(0, 0),
+    local_angle = 0,
+    image = "./packages/@carroted/characters/assets/water_bottle.png",
+    size = bottle_size / bottle_width,
+    color = Color:hex(0xffffff),
+});

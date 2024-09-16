@@ -27,7 +27,7 @@ for i=1,floor_width do
             parent = floor,
             local_position = vec2(-((floor_width - 1) * (24 / 12) * 0.5) + ((i - 1) * (24 / 12)), (26 / 12 / 2) + ((j-1) * (24/12)) - (8/12)),
             local_angle = 0,
-            image = "~/packages/@carroted/pylon_recon/assets/textures/wall.png",
+            image = "./packages/@carroted/pylon_recon/assets/textures/wall.png",
             size = 1 / 12,
             color = Color:hex(0xcfcfcf),
         });
@@ -42,7 +42,7 @@ for i=1,floor_width do
         parent = floor,
         local_position = vec2(-((floor_width - 1) * (24 / 12) * 0.5) + ((i - 1) * (24 / 12)), (26 / 12 / 2) - (7 / 12 / 2)),
         local_angle = 0,
-        image = "~/packages/@carroted/pylon_recon/assets/textures/floor_top.png",
+        image = "./packages/@carroted/pylon_recon/assets/textures/floor_top.png",
         size = 1 / 12,
         color = Color:hex(0xffffff),
     });
@@ -56,7 +56,7 @@ for i=1,floor_width do
             parent = floor,
             local_position = vec2(-((floor_width - 1) * (24 / 12) * 0.5) + ((i - 1) * (24 / 12)), -(26 / 12 / 2) - ((j-1) * (18/12)) + (18/12/2) + (1/12)),
             local_angle = 0,
-            image = "~/packages/@carroted/pylon_recon/assets/textures/floor_bottom.png",
+            image = "./packages/@carroted/pylon_recon/assets/textures/floor_bottom.png",
             size = 1 / 12,
             color = Color:hex(0xffffff),
         });
@@ -73,7 +73,7 @@ for i=1,floor_width do
                 parent = floor,
                 local_position = vec2(-((floor_width - 1) * (24 / 12) * 0.5) + ((i - 1) * (24 / 12)), j * 5),
                 local_angle = 0,
-                image = "embedded://textures/point_light.png",
+                image = "./packages/core/assets/textures/point_light.png",
                 size = 0.001,
                 color = Color:hex(0xffffff),
                 light = {

@@ -144,7 +144,7 @@ function spawn_light_box(pos)
         parent = light_box,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "embedded://textures/point_light.png",
+        image = "./packages/core/assets/textures/point_light.png",
         size = 0.001,
         color = Color:rgba(0,0,0,0),
         light = {
@@ -163,7 +163,7 @@ function spawn_light_box(pos)
         parent = light_box,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "embedded://textures/point_light.png",
+        image = "./packages/core/assets/textures/point_light.png",
         size = 0.001,
         color = Color:rgba(0,0,0,0),
         light = {
@@ -208,7 +208,7 @@ function spawn_indoors_light(pos, color)
         parent = light_circle,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "embedded://textures/point_light.png",
+        image = "./packages/core/assets/textures/point_light.png",
         size = 0.001,
         color = Color:rgba(0,0,0,0),
         light = {
@@ -227,7 +227,7 @@ function spawn_indoors_light(pos, color)
         parent = light_circle,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "embedded://textures/point_light.png",
+        image = "./packages/core/assets/textures/point_light.png",
         size = 0.001,
         color = Color:rgba(0,0,0,0),
         light = {
@@ -246,7 +246,7 @@ function spawn_indoors_light(pos, color)
         parent = light_circle,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "embedded://textures/point_light.png",
+        image = "./packages/core/assets/textures/point_light.png",
         size = 0.001,
         color = Color:rgba(0,0,0,0),
         light = {

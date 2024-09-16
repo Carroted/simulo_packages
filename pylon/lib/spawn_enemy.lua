@@ -107,7 +107,7 @@ local function spawn_enemy(spawn_offset)
         parent = enemy_main,
         local_position = vec2(0.5, 0),
         local_angle = 0,
-        image = "embedded://textures/point_light.png",
+        image = "./packages/core/assets/textures/point_light.png",
         size = 0.001,
         color = Color:rgba(0,0,0,0),
         light = {

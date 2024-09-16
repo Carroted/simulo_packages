@@ -31,7 +31,7 @@ local function spawn_nojump(center, count, horizontal)
         parent = box,
         local_position = vec2(0, (height / 2) - (13 / 12 / 2)),
         local_angle = 0,
-        image = "~/packages/@carroted/pylon_recon/assets/textures/nojump_top.png",
+        image = "./packages/@carroted/pylon_recon/assets/textures/nojump_top.png",
         size = 1 / 12,
         color = Color:hex(0xffffff),
     });
@@ -45,7 +45,7 @@ local function spawn_nojump(center, count, horizontal)
         parent = box,
         local_position = vec2(0, (-height / 2) + (13 / 12 / 2)),
         local_angle = 0,
-        image = "~/packages/@carroted/pylon_recon/assets/textures/nojump_bottom.png",
+        image = "./packages/@carroted/pylon_recon/assets/textures/nojump_bottom.png",
         size = 1 / 12,
         color = Color:hex(0xffffff),
     });
@@ -60,7 +60,7 @@ local function spawn_nojump(center, count, horizontal)
             parent = box,
             local_position = vec2(0, (height / 2) - (13 / 12) - (0.5 * ((i - 0.5) * 2))),
             local_angle = 0,
-            image = "~/packages/@carroted/pylon_recon/assets/textures/nojump_center.png",
+            image = "./packages/@carroted/pylon_recon/assets/textures/nojump_center.png",
             size = 1 / 12,
             color = Color:hex(0xffffff),
         });
