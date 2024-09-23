@@ -1,5 +1,3 @@
-Scene:reset();
-
 local ball = Scene:add_circle({
     position = vec2(0, 0),
     color = Color:hex(0x9f6ae8),
