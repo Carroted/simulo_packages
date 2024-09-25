@@ -40,3 +40,8 @@ function line(line_start,line_end,thickness,color,static)
 
     return line
 end;
+
+function gizmo_line(line_start,line_end,thickness,color,static)
+    local line = line(line_start,line_end,thickness,color,static);
+    table.insert(gizmos, line);
+end;

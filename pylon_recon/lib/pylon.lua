@@ -31,28 +31,19 @@ self:set_angle_locked(true);
 self:set_angle(0);
 self:set_restitution(0);
 
-local sprite = Scene:add_attachment({
-    name = "Image",
-    component = {
-        name = "Image",
-        code = nil,
-    },
-    parent = self,
-    local_position = vec2(0, 0),
-    local_angle = 0,
-    image = "./packages/@carroted/pylon_recon/assets/textures/entities/cone.png",
-    size = 1 / 12,
-    color = Color:hex(0xffffff),
-    flip_x = facing_left,
-});
-
 local facing_left = false;
 
-function redraw_sprite()
-    sprite:set_flip_x(facing_left);
-end;
+function update_sprite()
+    local color_1 = 0xffffff;
+    local color_2 = Color:rgba(0,0,0,0);
 
-redraw_sprite();
+    if facing_left then
+        color_1,color_2 = color_2,color_1;
+    end;
+
+    sprite_1:set_color(color_1);
+    sprite_2:set_color(color_2);
+end;
 
 function switch_to_flingstick()
     if inventory["flingstick"] == nil then return; end;
@@ -106,6 +97,9 @@ function on_event(id, data)
         end;
         print(data.weapon.id);
         inventory[data.weapon.id] = true;
+    elseif id == "@carroted/pylon_recon/pylon/init" then
+        sprite_1 = Scene:get_attachment_by_guid(data.sprite_1);
+        sprite_2 = Scene:get_attachment_by_guid(data.sprite_2);
     end;
 end;
 
@@ -197,7 +191,7 @@ function on_update()
     end;
 
     if facing_left ~= prev_facing_left then
-        redraw_sprite();
+        update_sprite();
     end;
 
     local grounded = ground_check();
