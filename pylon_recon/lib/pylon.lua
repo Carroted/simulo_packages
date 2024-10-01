@@ -25,6 +25,34 @@ local weapon_blocking_movement = false;
 
 local inventory = {};
 
+function on_save()
+    return {
+        weapon = weapon,
+        weapon_player_joint = weapon_player_joint,
+        weapon_ground_joint = weapon_ground_joint,
+        weapon_offset = weapon_offset,
+        weapon_cooldown = weapon_cooldown,
+        ground = ground,
+        hp = hp,
+        sprite_1 = sprite_1,
+        sprite_2 = sprite_2,
+    };
+end;
+
+function on_start(saved_data)
+    if saved_data ~= nil then
+        weapon = saved_data.weapon;
+        weapon_player_joint = saved_data.weapon_player_joint;
+        weapon_ground_joint = saved_data.weapon_ground_joint;
+        weapon_offset = saved_data.weapon_offset;
+        weapon_cooldown = saved_data.weapon_cooldown;
+        ground = saved_data.ground;
+        hp = saved_data.hp;
+        sprite_1 = saved_data.sprite_1;
+        sprite_2 = saved_data.sprite_2;
+    end;
+end;
+
 -- Physics and Rendering Setup
 
 self:set_angle_locked(true);

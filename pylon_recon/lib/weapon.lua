@@ -14,6 +14,20 @@ local overlay = Scene:add_attachment({
 
 local light_overlay = nil;
 
+function on_save()
+    return {
+        overlay = overlay,
+        light_overlay = light_overlay,
+    };
+end;
+
+function on_start(saved_data)
+    if saved_data ~= nil then
+        overlay = saved_data.overlay;
+        light_overlay = saved_data.light_overlay;
+    end;
+end;
+
 function set_overlay_enabled(enabled)
     if enabled then
         overlay:set_color(Color:hex(0xffffff));

@@ -111,6 +111,8 @@ local function setup(color)
 
     ball:set_linear_velocity(vec2(0, 3));
 
+    ball:set_is_bullet(true);
+
     ball:set_restitution(1.1);
     paddle_1:set_restitution(0);
     paddle_2:set_restitution(0);
