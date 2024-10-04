@@ -17,7 +17,7 @@ local hash = Scene:add_component({
     code = require('./packages/@carroted/raycast3d/lib/player.lua', 'string')
 });
 
-player:add_component(hash);
+player:add_component({ hash = hash });
 
 Scene:add_box({
     position = vec2(0, 0),

@@ -26,4 +26,4 @@ local hash = Scene:add_component({
     code = require('./packages/@carroted/gun/lib/gun.lua', 'string')
 });
 
-gun:add_component(hash);
+gun:add_component({ hash = hash });

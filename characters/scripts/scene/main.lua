@@ -108,7 +108,7 @@ function spawn_mike(position)
         color = Color:hex(0x423847),
         is_static = false,
     });
-    end_box:add_component(hash);
+    end_box:add_component({ hash = hash });
 
     local hinge4 = Scene:add_hinge_at_world_point({
         point = position + vec2(1.27015, 0.284),
@@ -392,7 +392,7 @@ function spawn_emperor(position)
         code = require('./packages/@carroted/characters/lib/emperor_laser.lua', 'string')
     });
 
-    right_laser_box:add_component(hash);
+    right_laser_box:add_component({ hash = hash });
 
     local left_laser_box = Scene:add_box({
         position = position + vec2(-0.13 - 0.48, 0.19 + 1.3925),
@@ -427,7 +427,7 @@ function spawn_emperor(position)
         code = require('./packages/@carroted/characters/lib/emperor_laser.lua', 'string')
     });
 
-    left_laser_box:add_component(hash);
+    left_laser_box:add_component({ hash = hash });
 end;
 
 spawn_emperor(vec2(6, -10.9));
@@ -495,7 +495,7 @@ local hash = Scene:add_component({
     code = require('./packages/@carroted/characters/lib/detacher.lua', 'string')
 });
 
-detacher:add_component(hash);
+detacher:add_component({ hash = hash });
 
 local attacher = Scene:add_polygon({
     points = {
@@ -514,7 +514,7 @@ local hash = Scene:add_component({
     code = require('./packages/@carroted/characters/lib/attacher.lua', 'string')
 });
 
-attacher:add_component(hash);]]
+attacher:add_component({ hash = hash });]]
 
 -- hiiii
 
@@ -573,7 +573,7 @@ local hash = Scene:add_component({
     code = require('./packages/@carroted/characters/lib/cannibal.lua', 'string')
 });
 
-head:add_component(hash);]]
+head:add_component({ hash = hash });]]
 
 local hammer_1 = Scene:add_box({
     position = vec2(30, 0),
@@ -600,7 +600,7 @@ local hash = Scene:add_component({
     code = require('./packages/@carroted/characters/lib/hammer.lua', 'string')
 });
 
-hammer_2:add_component(hash);
+hammer_2:add_component({ hash = hash });
 
 --[[
 local nuke = Scene:add_box({
@@ -617,7 +617,7 @@ local hash = Scene:add_component({
     code = require('./packages/@carroted/characters/lib/nuke.lua', 'string')
 });
 
-nuke:add_component(hash);]]
+nuke:add_component({ hash = hash });]]
 
 local spawn_pylon = require('./packages/@carroted/pylon/lib/spawn.lua');
 

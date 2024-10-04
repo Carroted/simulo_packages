@@ -218,7 +218,7 @@ local function spawn_pylon(spawn_offset, light, permanent_controller)
         code = require('./packages/@carroted/pylon/lib/weapon.lua', 'string')
     });
 
-    weapon_2:add_component(hash);
+    weapon_2:add_component({ hash = hash });
 
     weapon_1:set_angle(-0.38945937156677246);
 
@@ -229,7 +229,7 @@ local function spawn_pylon(spawn_offset, light, permanent_controller)
         code = require('./packages/@carroted/pylon/lib/controller.lua', 'string')
     });
 
-    pylon_main:add_component(hash);
+    pylon_main:add_component({ hash = hash });
     pylon_main:send_event("@carroted/pylon/objects", {
         left_eye = left_eye.guid,
         right_eye = right_eye.guid,

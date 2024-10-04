@@ -78,4 +78,4 @@ local hash = Scene:add_component({
     code = require('./packages/@carroted/rpg/lib/player.lua', 'string')
 });
 
-player:add_component(hash);
+player:add_component({ hash = hash });

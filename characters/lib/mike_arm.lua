@@ -65,7 +65,7 @@ function on_update()
         proj:set_restitution(1);
         proj:set_friction(0);
 
-        proj:add_component(proj_hash);
+        proj:add_component({ hash = proj_hash });
         
         -- Calculate the projectile velocity
         local velocity = vec2(

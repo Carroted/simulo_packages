@@ -12,7 +12,7 @@ local hash = Scene:add_component({
     code = require('./packages/@carroted/viruses/lib/virus.lua', 'string')
 });
 
-ball:add_component(hash);
+ball:add_component({ hash = hash });
 
 ball:send_event("@carroted/viruses/set_data", {
     takeover = 10,
@@ -32,7 +32,7 @@ local ball = Scene:add_circle({
     radius = 0.25,
 });
 
-ball:add_component(hash);
+ball:add_component({ hash = hash });
 
 ball:send_event("@carroted/viruses/set_data", {
     takeover = 10,

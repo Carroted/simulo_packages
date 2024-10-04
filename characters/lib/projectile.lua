@@ -12,7 +12,7 @@ function explosion()
         is_static = true;
     });
     c:temp_set_collides(false);
-    c:add_component(hash);
+    c:add_component({ hash = hash });
 end;
 
 function on_collision_start(data)

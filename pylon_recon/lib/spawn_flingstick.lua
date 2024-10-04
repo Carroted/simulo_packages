@@ -27,7 +27,7 @@ local function spawn_flingstick(pos)
         code = require('./packages/@carroted/pylon_recon/lib/weapon.lua', 'string')
     });
 
-    flingstick:add_component(hash);
+    flingstick:add_component({ hash = hash });
 
     return flingstick;
 end;

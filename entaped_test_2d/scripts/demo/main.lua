@@ -19,7 +19,7 @@ local hash = Scene:add_component({
     code = require('./packages/@carroted/entaped_test_2d/lib/player.lua', 'string')
 });
 
-player:add_component(hash);
+player:add_component({ hash = hash });
 
 local box = Scene:add_box({
     position = vec2(6, -2),

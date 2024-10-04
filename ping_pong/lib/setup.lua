@@ -100,7 +100,7 @@ local function setup(color)
         code = require('./packages/@carroted/ping_pong/lib/computer.lua', 'string')
     });
 
-    paddle_2:add_component(hash);
+    paddle_2:add_component({ hash = hash });
 
     local ball = Scene:add_circle({
         position = vec2(0, 0),

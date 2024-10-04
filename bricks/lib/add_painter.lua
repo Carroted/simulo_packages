@@ -59,7 +59,7 @@ local function add_painter(pos, color, width, height)
     top_base:bolt_to(base);
     line:bolt_to(base);
 
-    base:add_component(hash);
+    base:add_component({ hash = hash });
     base:send_event("@carroted/bricks/painter/init", {
         distance = (height * 0.2) + 0.05,
         color = color,

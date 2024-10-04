@@ -54,7 +54,7 @@ function on_collision_stay(obj)
             end;
 
             if virus_data == nil then
-                obj:add_component(self_hash);
+                obj:add_component({ hash = self_hash });
                 print('added a realer');
                 obj:send_event("@carroted/viruses/request_data", {
                     guid = self.guid,

@@ -9,7 +9,7 @@ local hash = Scene:add_component({
     code = require('./packages/@carroted/ping_pong/lib/player_drag.lua', 'string')
 });
 
-paddle_1:add_component(hash);
+paddle_1:add_component({ hash = hash });
 
 local light_parent = Scene:add_circle({
     position = vec2(0,0),

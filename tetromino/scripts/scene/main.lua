@@ -17,4 +17,4 @@ local manager = Scene:add_box({
     color = 0xa0a0a0,
 });
 
-manager:add_component(hash);
+manager:add_component({ hash = hash });

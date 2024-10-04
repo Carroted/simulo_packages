@@ -12,7 +12,7 @@ function explosion(point)
         is_static = true;
     });
     c:temp_set_collides(false);
-    c:add_component(hash);
+    c:add_component({ hash = hash });
     Scene:add_attachment({
         name = "Image",
         component = {
@@ -56,7 +56,7 @@ function draw_line(line_start, line_end, thickness, color, static)
     line:temp_set_collides(false);
     line:set_angle(rotation);
 
-    line:add_component(hash);
+    line:add_component({ hash = hash });
 
     return line
 end;

@@ -40,7 +40,7 @@ function draw_line(line_start, line_end, thickness, color, static)
     line:set_angle(rotation);
     line:bolt_to(self);
 
-    line:add_component(hash);
+    line:add_component({ hash = hash });
 
     line:send_event("@carroted/entaped_test_2d/tape/init", {
         guid = self.guid,
@@ -135,7 +135,7 @@ function on_event(id, data)
         self:bolt_to(closest_tape);
         other_tape:set_body_type(BodyType.Static);
 
-        closest_tape:add_component(hash);
+        closest_tape:add_component({ hash = hash });
 
         closest_tape:send_event("@carroted/entaped_test_2d/tape/init", {
             guid = self.guid,

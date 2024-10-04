@@ -93,7 +93,7 @@ local function spawn_enemy(spawn_offset)
         code = require('./packages/@carroted/pylon/lib/enemy.lua', 'string')
     });
 
-    enemy_main:add_component(hash);
+    enemy_main:add_component({ hash = hash });
     enemy_main:send_event("@carroted/pylon/objects", {
         weapon = weapon_2.guid,
     });

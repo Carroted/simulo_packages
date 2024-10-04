@@ -69,7 +69,7 @@ local hash = Scene:add_component({
     code = require('./packages/@carroted/pylon/lib/door.lua', 'string')
 });
 
-door:add_component(hash);
+door:add_component({ hash = hash });
 
 local door2 = Scene:add_box({
     position = vec2(10 + 4, -10 + (2 / 2)),
@@ -78,7 +78,7 @@ local door2 = Scene:add_box({
     is_static = true,
 });
 
-door2:add_component(hash);
+door2:add_component({ hash = hash });
 
 Scene:add_box({
     position = vec2(10 + 4, -10 + 2 + 1),

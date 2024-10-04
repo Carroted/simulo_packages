@@ -51,11 +51,12 @@ local function spawn_pylon(pos)
         code = require('./packages/@carroted/pylon_recon/lib/pylon.lua', 'string')
     });
 
-    pylon:add_component(hash);
-
-    pylon:send_event("@carroted/pylon_recon/pylon/init", {
-        sprite_1 = sprite_1.guid,
-        sprite_2 = sprite_2.guid,
+    pylon:add_component({
+        hash = hash,
+        saved_data = {
+            sprite_1 = sprite_1,
+            sprite_2 = sprite_2,
+        },
     });
 end;
 

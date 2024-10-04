@@ -27,7 +27,7 @@ local function spawn_gun(pos)
         code = require('./packages/@carroted/pylon_recon/lib/weapon.lua', 'string')
     });
 
-    gun:add_component(hash);
+    gun:add_component({ hash = hash });
 end;
 
 return spawn_gun;

@@ -23,6 +23,8 @@ local weapon_ground_joint = nil;
 local ground = nil;
 local weapon_blocking_movement = false;
 
+local facing_left = false;
+
 local inventory = {};
 
 function on_save()
@@ -36,20 +38,31 @@ function on_save()
         hp = hp,
         sprite_1 = sprite_1,
         sprite_2 = sprite_2,
+        weapon_blocking_movement = weapon_blocking_movement,
+        inventory = inventory,
+        facing_left = facing_left,
     };
 end;
 
 function on_start(saved_data)
     if saved_data ~= nil then
-        weapon = saved_data.weapon;
-        weapon_player_joint = saved_data.weapon_player_joint;
-        weapon_ground_joint = saved_data.weapon_ground_joint;
-        weapon_offset = saved_data.weapon_offset;
-        weapon_cooldown = saved_data.weapon_cooldown;
-        ground = saved_data.ground;
-        hp = saved_data.hp;
         sprite_1 = saved_data.sprite_1;
         sprite_2 = saved_data.sprite_2;
+
+        -- when we init pylon we pass sprites as saved data,
+        -- so everything else is null. easy check is just looking at hp
+        if saved_data.hp ~= nil then
+            weapon = saved_data.weapon;
+            weapon_player_joint = saved_data.weapon_player_joint;
+            weapon_ground_joint = saved_data.weapon_ground_joint;
+            weapon_offset = saved_data.weapon_offset;
+            weapon_cooldown = saved_data.weapon_cooldown;
+            ground = saved_data.ground;
+            hp = saved_data.hp;
+            weapon_blocking_movement = saved_data.weapon_blocking_movement;
+            inventory = saved_data.inventory;
+            facing_left = saved_data.facing_left;
+        end;
     end;
 end;
 
@@ -58,8 +71,6 @@ end;
 self:set_angle_locked(true);
 self:set_angle(0);
 self:set_restitution(0);
-
-local facing_left = false;
 
 function update_sprite()
     local color_1 = 0xffffff;
@@ -125,9 +136,6 @@ function on_event(id, data)
         end;
         print(data.weapon.id);
         inventory[data.weapon.id] = true;
-    elseif id == "@carroted/pylon_recon/pylon/init" then
-        sprite_1 = Scene:get_attachment_by_guid(data.sprite_1);
-        sprite_2 = Scene:get_attachment_by_guid(data.sprite_2);
     end;
 end;
 
@@ -280,7 +288,7 @@ function on_update()
         weapon_blocking_movement = true;
     end;
 
-    if (Input:pointer_just_released()) and (weapon_player_joint ~= nil) then
+    if not (Input:pointer_pressed()) and (weapon_player_joint ~= nil) then
         ground:destroy();
         ground = nil;
         weapon_player_joint:destroy();
