@@ -1,8 +1,11 @@
+self:temp_set_group_index(-1340134);
+
 local tapes = {};
 local hinge = nil;
 local last_point = nil;
 local last_linvel = nil;
 local last_angvel = nil;
+local detached = true;
 local sprite = Scene:add_attachment({
     name = "Image",
     component = {
@@ -17,6 +20,9 @@ local sprite = Scene:add_attachment({
     color = Color:hex(0xffffff),
 });
 
+local tape_color = Color:hex(0xe7ccab);
+tape_color.a = 120;
+
 local hash = Scene:add_component({
     name = "Tape",
     id = "@carroted/entaped_test_2d/tape",
@@ -24,7 +30,7 @@ local hash = Scene:add_component({
     code = require('./packages/@carroted/entaped_test_2d/lib/tape.lua', 'string')
 });
 
-function draw_line(line_start, line_end, thickness, color, static)
+function draw_line(line_start, line_end, thickness, color, static, obj)
     local pos = (line_start + line_end) / 2;
     local sx = (line_start - line_end):magnitude();
     local relative_line_end = line_end - pos;
@@ -35,10 +41,13 @@ function draw_line(line_start, line_end, thickness, color, static)
         is_static = static,
         color = color
     });
+    line:temp_set_group_index(-1340134);
+    line:set_is_bullet(true);
 
     --line:temp_set_collides(false);
     line:set_angle(rotation);
     line:bolt_to(self);
+    self:apply_force(-self:get_up_direction() * 2, self:get_position());
 
     line:add_component({ hash = hash });
 
@@ -47,16 +56,12 @@ function draw_line(line_start, line_end, thickness, color, static)
         size = sx,
     });
 
-    local ceil = Scene:add_box({
-        position = line_end,
-        size = vec2(0.2, 0.1),
-        color = 0xa0a0ff,
-        is_static = true
-    });
+    local ceil = obj;
     hinge = Scene:add_hinge_at_world_point({
         point = line_end,
         object_a = ceil,
         object_b = line,
+        collide_connected = true,
     });
 
     return line
@@ -64,11 +69,6 @@ end;
 
 function on_event(id, data)
     if id == "@carroted/entaped_test_2d/tape/collision" then
-        local circly = Scene:get_objects_in_circle({
-            position = data.point,
-            radius = 0.1
-        });
-        if #circly == 0 then return; end;
         -- just split that tape into 2
         local tape = Scene:get_object_by_guid(data.guid);
         local angle = tape:get_angle();
@@ -80,12 +80,12 @@ function on_event(id, data)
             end;
         end;
         last_point = data.point;
-        Scene:add_circle({
+        --[[Scene:add_circle({
             position = data.point,
             radius = 0.05,
             is_static = true,
             color = 0xffffff
-        }):temp_set_collides(false);
+        }):temp_set_collides(false);]]
         local sx_1 = local_point.x + (size / 2);
         local sx_2 = size - sx_1;
 
@@ -95,9 +95,11 @@ function on_event(id, data)
             position = pos_1,
             size = vec2(sx_1, 0.025),
             is_static = false,
-            color = 0xffff00
+            color = tape_color
         });
+        new_tape_1:temp_set_group_index(-1340134);
         new_tape_1:set_angle(angle);
+        new_tape_1:set_is_bullet(true);
 
         -- Second piece (right of the split)
         local pos_2 = tape:get_world_point(vec2(local_point.x, 0) + vec2(sx_2 / 2, 0));
@@ -105,8 +107,10 @@ function on_event(id, data)
             position = pos_2,
             size = vec2(sx_2, 0.025),
             is_static = false,
-            color = 0xff0000
+            color = tape_color
         });
+        new_tape_2:set_is_bullet(true);
+        new_tape_2:temp_set_group_index(-1340134);
         new_tape_2:set_angle(angle);
 
         -- find Closest one
@@ -131,8 +135,11 @@ function on_event(id, data)
             point = data.point,
             object_a = closest_tape,
             object_b = other_tape,
+            collide_connected = true,
         });
-        self:bolt_to(closest_tape);
+        if not detached then
+            self:bolt_to(closest_tape);
+        end;
         other_tape:set_body_type(BodyType.Static);
 
         closest_tape:add_component({ hash = hash });
@@ -144,35 +151,18 @@ function on_event(id, data)
 
         tape:destroy();
 
-        self:set_linear_velocity(last_linvel);
-        self:set_angular_velocity(last_anvel);
+        if not detached then
+            self:set_linear_velocity(last_linvel);
+            self:set_angular_velocity(last_angvel);
+        end;
     end;
 end;
 
 local steps_to_restatic = 0;
 
-local num = 0;
 function on_step()
     last_linvel = self:get_linear_velocity();
     last_angvel = self:get_angular_velocity();
-
-    num += 1;
-    if num == 2 then
-    --if Input:key_just_pressed("E") then
-        local cast = {
-            origin = self:get_world_point(vec2(0.4, 0)),
-            direction = self:get_right_direction(),
-            distance = 10,
-            closest_only = true,
-        };
-
-        local hits = Scene:raycast(cast);
-        if #hits == 0 then
-            draw_line(cast.origin, cast.origin + (cast.direction:normalize() * cast.distance), 0.025, 0xff0000, false);
-        else
-            draw_line(cast.origin, hits[1].point, 0.025, 0xff0000, false);
-        end;
-    end;
 
     if steps_to_restatic > 0 then
         if steps_to_restatic == 1 then
@@ -185,13 +175,52 @@ end;
 
 function on_update()
     if Input:key_just_pressed("E") then
+        if detached then
+            detached = false;
+            print('hoy');
+            local cast = {
+                origin = self:get_world_point(vec2(0.4, 0)),
+                direction = self:get_right_direction(),
+                distance = 1000,
+                closest_only = true,
+            };
+
+            local hits = Scene:raycast(cast);
+            if #hits == 0 then
+                --draw_line(cast.origin, cast.origin + (cast.direction:normalize() * cast.distance), 0.025, tape_color, false);
+            else
+                draw_line(cast.origin, hits[1].point, 0.025, tape_color, false, hits[1].object);
+            end;
+        else
+            detached = true;
+            last_linvel = self:get_linear_velocity();
+            last_angvel = self:get_angular_velocity();
+            --self:temp_set_collides(false);
+            self:detach();
+            self:set_linear_velocity(last_linvel);
+            self:set_angular_velocity(last_angvel * 3);
+        end;
+    end;
+
+    if detached then
+        -- Adjust rotation to use the player position as the pivot
+        local player_pos = self:get_position();
+        local world_position = Input:pointer_pos();
+        local angle = math.atan2(world_position.y - player_pos.y, world_position.x - player_pos.x)
+        
+        -- Set weapon's angle
+        self:set_angle(angle);
+    end;
+--[[
+    if Input:key_just_pressed("E") then
+        detached = true;
         last_linvel = self:get_linear_velocity();
         last_angvel = self:get_angular_velocity();
-        self:temp_set_collides(false);
+        --self:temp_set_collides(false);
         self:detach();
         self:set_linear_velocity(last_linvel);
-        self:set_angular_velocity(last_angvel * 2);
-        steps_to_restatic = 10;
-        sprite:set_color(Color:rgba(255,255,255,64));
-    end;
+        self:set_angular_velocity(last_angvel * 3);
+        --steps_to_restatic = 10;
+        --sprite:set_color(Color:rgba(255,255,255,64));
+    end;]]
 end;

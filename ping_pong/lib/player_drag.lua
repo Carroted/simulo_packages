@@ -20,6 +20,8 @@ local spring = Scene:add_drag_spring({
 });
 
 function on_update()
+    speed = self_component:get_property("speed").value;
+    
     clear_gizmos();
     spring:set_target(Input:pointer_pos());
     gizmo_line(spring:get_world_point_on_object(), Input:pointer_pos(), 0.02, 0xffffff, true);

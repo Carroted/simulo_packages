@@ -7,10 +7,14 @@ function clear_gizmos()
     gizmos = {};
 end;
 
-function gizmo_circle(pos, color)
+function gizmo_circle(pos, color, radius)
+    if radius == nil then
+        radius = 0.01;
+    end;
+
     local c = Scene:add_circle({
         position = pos,
-        radius = 0.01,
+        radius = radius,
         is_static = true,
         color = color,
     });

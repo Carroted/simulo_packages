@@ -6,7 +6,16 @@ local hash = Scene:add_component({
     name = "Player Paddle",
     id = "@carroted/ping_pong/player",
     version = "0.1.0",
-    code = require('./packages/@carroted/ping_pong/lib/player_normal.lua', 'string')
+    code = require('./packages/@carroted/ping_pong/lib/player_normal.lua', 'string'),
+    properties = {
+        speed = {
+            name = "Speed",
+            input_type = "slider",
+            default_value = 3,
+            min_value = 0,
+            max_value = 10,
+        }
+    }
 });
 
 paddle_1:add_component({ hash = hash });

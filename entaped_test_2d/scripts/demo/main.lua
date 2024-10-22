@@ -1,4 +1,4 @@
-Scene:reset();
+Scene:reset():destroy();
 
 local dispenser_width = 926;
 local dispenser_height = 704;
@@ -21,28 +21,46 @@ local hash = Scene:add_component({
 
 player:add_component({ hash = hash });
 
+local ceiling = Scene:add_box({
+    position = vec2(8, 0),
+    size = vec2(8, 0.5),
+    color = 0xffffff,
+    is_static = true
+});
+ceiling:set_restitution(0);
+ceiling:set_angle(-0.2);
+
 local box = Scene:add_box({
     position = vec2(6, -2),
-    size = vec2(0.5, 0.5),
-    color = 0xffffff,
-    is_static = true
-});
-local box = Scene:add_box({
-    position = vec2(6, -2.5),
-    size = vec2(0.5, 0.5),
-    color = 0xffffff,
-    is_static = true
-});
-local box = Scene:add_box({
-    position = vec2(6.5, -2.5),
-    size = vec2(0.5, 0.5),
+    size = vec2(2, 1),
     color = 0xffffff,
     is_static = true
 });
 
 local box = Scene:add_box({
+    position = vec2(15+3 + 40, -3),
+    size = vec2(80, 1),
+    color = 0xffffff,
+    is_static = true
+});
+
+local box = Scene:add_box({
+    position = vec2(15+7, -8),
+    size = vec2(2, 1),
+    color = 0xffffff,
+    is_static = true
+});
+
+local box = Scene:add_box({
+    position = vec2(15+7+30, -8),
+    size = vec2(2, 1),
+    color = 0xffffff,
+    is_static = true
+});
+--[[
+local box = Scene:add_box({
     position = vec2(15+3, -6),
     size = vec2(8, 0.5),
     color = 0xffffff,
     is_static = true
-}):set_restitution(0);
+}):set_restitution(0);]]

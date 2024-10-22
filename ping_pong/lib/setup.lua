@@ -97,7 +97,16 @@ local function setup(color)
         name = "Computer Paddle",
         id = "@carroted/ping_pong/computer",
         version = "0.1.0",
-        code = require('./packages/@carroted/ping_pong/lib/computer.lua', 'string')
+        code = require('./packages/@carroted/ping_pong/lib/computer.lua', 'string'),
+        properties = {
+            speed = {
+                name = "Speed",
+                input_type = "slider",
+                default_value = 3,
+                min_value = 0,
+                max_value = 10,
+            }
+        }
     });
 
     paddle_2:add_component({ hash = hash });

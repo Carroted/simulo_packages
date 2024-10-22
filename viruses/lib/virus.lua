@@ -54,11 +54,18 @@ function on_collision_stay(obj)
             end;
 
             if virus_data == nil then
-                obj:add_component({ hash = self_hash });
+                obj:add_component({ hash = self_component.hash });
                 print('added a realer');
                 obj:send_event("@carroted/viruses/request_data", {
                     guid = self.guid,
                 });
+                obj:send_event("@carroted/viruses/request_data", {
+                    guid = self.guid,
+                });
+                obj:send_event("@carroted/viruses/request_data", {
+                    guid = self.guid,
+                });
+                print('event done');
             end;
             virus_data.takeover_equal = takeover_equal;
             virus_data.takeover = lerp(virus_data.takeover, takeover_to, 1 / 60 / 2 / shake_speed);
@@ -99,8 +106,13 @@ function on_step()
     end;
 end;
 
+function on_start()
+    print('start');
+end;
+
 function on_event(id, data)
     if id == "@carroted/viruses/request_data" then
+        print('data requested')
         Scene:get_object_by_guid(data.guid):send_event("@carroted/viruses/response_data", {
             takeover = takeover,
             color = color,
@@ -122,5 +134,6 @@ function on_event(id, data)
         shake_speed = data.shake_speed;
         takeover_to = data.takeover_to;
         takeover_equal = data.takeover_equal;
+        print('data')
     end;
 end;

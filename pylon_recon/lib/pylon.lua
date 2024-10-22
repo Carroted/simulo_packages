@@ -136,6 +136,17 @@ function on_event(id, data)
         end;
         print(data.weapon.id);
         inventory[data.weapon.id] = true;
+    elseif id == "jump" then
+        local grounded = ground_check();
+        
+        if grounded then
+            local current_vel = self:get_linear_velocity();
+
+            if current_vel.y < jump_force then
+                current_vel.y = jump_force;
+                self:set_linear_velocity(current_vel);
+            end;
+        end;
     end;
 end;
 
@@ -192,6 +203,8 @@ function update_weapon()
 end;
 
 function on_update()
+    self:set_angle(self_component:get_property("z_angle").value);
+
     Camera:set_position(camera_pos);
     Camera:set_orthographic_scale(camera_zoom);
 

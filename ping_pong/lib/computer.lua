@@ -255,6 +255,8 @@ local hit_first_time_delay = 50;
 local hit_first_time_counter = hit_first_time_delay;
 
 function on_update()
+    speed = self_component:get_property("speed").value;
+    
     if ball == nil then return; end;
     if ball:is_destroyed() then return; end;
 

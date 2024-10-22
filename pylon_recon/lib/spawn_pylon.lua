@@ -48,7 +48,28 @@ local function spawn_pylon(pos)
         name = "Pylon",
         id = "@carroted/pylon_recon/pylon",
         version = "0.1.0",
-        code = require('./packages/@carroted/pylon_recon/lib/pylon.lua', 'string')
+        code = require('./packages/@carroted/pylon_recon/lib/pylon.lua', 'string'),
+        properties = {
+            health = {
+                name = "Health",
+                input_type = "slider",
+                default_value = 100,
+                min_value = 0,
+                max_value = 100,
+            },
+            jump = {
+                name = "Jump",
+                input_type = "button",
+                event = "jump"
+            },
+            z_angle = {
+                name = "Angle (just for demo)",
+                input_type = "slider",
+                default_value = 0,
+                min_value = -math.pi,
+                max_value = math.pi,
+            }
+        }
     });
 
     pylon:add_component({
