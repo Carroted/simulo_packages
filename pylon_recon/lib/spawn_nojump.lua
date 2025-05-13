@@ -14,7 +14,7 @@ local function spawn_nojump(center, count, horizontal)
         position = center,
         size = vec2((14 / 12), height),
         color = 0xff0000,
-        is_static = true,
+        body_type = BodyType.Static,
         name = "nojump"
     });
     box:set_restitution(0);
@@ -24,45 +24,36 @@ local function spawn_nojump(center, count, horizontal)
 
     Scene:add_attachment({
         name = "Image",
-        component = {
-            name = "Image",
-            code = nil,
-        },
         parent = box,
         local_position = vec2(0, (height / 2) - (13 / 12 / 2)),
         local_angle = 0,
-        image = "./packages/@carroted/pylon_recon/assets/textures/nojump_top.png",
-        size = 1 / 12,
-        color = Color:hex(0xffffff),
+        images = {{
+            texture = require("./packages/@carroted/pylon_recon/assets/textures/nojump_top.png"),
+            scale = vec2(1/12, 1/12),
+        }},
     });
 
     Scene:add_attachment({
         name = "Image",
-        component = {
-            name = "Image",
-            code = nil,
-        },
         parent = box,
         local_position = vec2(0, (-height / 2) + (13 / 12 / 2)),
         local_angle = 0,
-        image = "./packages/@carroted/pylon_recon/assets/textures/nojump_bottom.png",
-        size = 1 / 12,
-        color = Color:hex(0xffffff),
+        images = {{
+            texture = require("./packages/@carroted/pylon_recon/assets/textures/nojump_bottom.png"),
+            scale = vec2(1/12, 1/12),
+        }},
     });
 
     for i=1,center_count do
         Scene:add_attachment({
             name = "Image",
-            component = {
-                name = "Image",
-                code = nil,
-            },
             parent = box,
             local_position = vec2(0, (height / 2) - (13 / 12) - (0.5 * ((i - 0.5) * 2))),
             local_angle = 0,
-            image = "./packages/@carroted/pylon_recon/assets/textures/nojump_center.png",
-            size = 1 / 12,
-            color = Color:hex(0xffffff),
+            images = {{
+                texture = require("./packages/@carroted/pylon_recon/assets/textures/nojump_center.png"),
+                scale = vec2(1/12, 1/12),
+            }},
         });
     end;
 end;

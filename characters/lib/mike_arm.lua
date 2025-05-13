@@ -1,3 +1,5 @@
+local hinge = require('core/lib/hinge.lua');
+
 local normal_color = Color:hex(0x423847);
 local sticky_color = Color:hex(0x8ec25e);
 
@@ -10,7 +12,7 @@ local current_cooldown = 0;
 
 local prev_angle = self:get_angle();
 
-local proj_hash = Scene:add_component({
+local proj_hash = Scene:add_component_def({
     name = "Projectile",
     id = "@carroted/characters/projectile",
     version = "0.1.0",
@@ -18,7 +20,7 @@ local proj_hash = Scene:add_component({
 });
 
 function on_update()
-    if Input:key_just_pressed("Z") then
+    if Scene:get_host():key_just_pressed("Z") then
         sticky = not sticky;
         if sticky then
             self:set_color(sticky_color);
@@ -31,7 +33,7 @@ function on_update()
         end;
     end;
 
-    if Input:key_pressed("Q") and (current_cooldown <= 0) then
+    if Scene:get_host():key_pressed("Q") and (current_cooldown <= 0) then
         current_cooldown = cooldown;
 
         local player_pos = self:get_position()
@@ -55,13 +57,10 @@ function on_update()
             position = end_point,
             radius = 0.05,
             color = proj_color,
-            is_static = false,
             name = name,
         });
         proj:set_density(10);
         proj:set_angle(angle);
-
-        proj:temp_set_group_index(-69);
         proj:set_restitution(1);
         proj:set_friction(0);
 
@@ -80,19 +79,18 @@ function on_update()
     end;
 end;
 
-function on_collision_start(data)
+function on_hit(data)
     if sticky then
-        for i=1,#data.points do
-            table.insert(sticky_hinges, Scene:add_hinge_at_world_point({
-                point = data.points[i],
-                object_a = self,
-                object_b = data.other,
-                motor_enabled = false,
-                motor_speed = 0, -- radians per second
-                max_motor_torque = 1.25, -- maximum torque for the motor, in newton-meters
-                collide_connected = true,
-            }));
-        end;
+        table.insert(sticky_hinges, hinge({
+            point = data.point,
+            object_a = self,
+            object_b = data.other,
+            motor_enabled = false,
+            motor_speed = 0, -- radians per second
+            max_motor_torque = 1.25, -- maximum torque for the motor, in newton-meters
+            collide_connected = true,
+            color = Color:rgba(0,0,0,0),
+        }));
     end;
 end;
 

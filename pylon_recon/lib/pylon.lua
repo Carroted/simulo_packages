@@ -1,5 +1,7 @@
 -- Parameters
 
+local player = Scene:get_host();
+
 local hp = 100;
 
 local speed = 4.1;
@@ -11,6 +13,8 @@ local debug = false;
 local camera_pos = self:get_position() + vec2(0, 0);
 local camera_zoom = 0.02;
 
+local pin = nil;
+
 -- Imports
 
 require './packages/@carroted/pylon_recon/lib/gizmos.lua';
@@ -18,10 +22,12 @@ require './packages/@carroted/pylon_recon/lib/gizmos.lua';
 local weapon_offset = vec2(1.232, 0);
 local weapon_cooldown = 0;
 local weapon = nil;
+local selected_weapon = nil;
 local weapon_player_joint = nil;
 local weapon_ground_joint = nil;
-local ground = nil;
 local weapon_blocking_movement = false;
+
+local sprite = nil;
 
 local facing_left = false;
 
@@ -34,10 +40,9 @@ function on_save()
         weapon_ground_joint = weapon_ground_joint,
         weapon_offset = weapon_offset,
         weapon_cooldown = weapon_cooldown,
-        ground = ground,
+        selected_weapon = selected_weapon,
         hp = hp,
-        sprite_1 = sprite_1,
-        sprite_2 = sprite_2,
+        sprite = sprite,
         weapon_blocking_movement = weapon_blocking_movement,
         inventory = inventory,
         facing_left = facing_left,
@@ -46,18 +51,17 @@ end;
 
 function on_start(saved_data)
     if saved_data ~= nil then
-        sprite_1 = saved_data.sprite_1;
-        sprite_2 = saved_data.sprite_2;
+        sprite = saved_data.sprite;
 
-        -- when we init pylon we pass sprites as saved data,
+        -- when we init pylon we pass sprite as saved data,
         -- so everything else is null. easy check is just looking at hp
         if saved_data.hp ~= nil then
             weapon = saved_data.weapon;
+            selected_weapon = saved_data.selected_weapon;
             weapon_player_joint = saved_data.weapon_player_joint;
             weapon_ground_joint = saved_data.weapon_ground_joint;
             weapon_offset = saved_data.weapon_offset;
             weapon_cooldown = saved_data.weapon_cooldown;
-            ground = saved_data.ground;
             hp = saved_data.hp;
             weapon_blocking_movement = saved_data.weapon_blocking_movement;
             inventory = saved_data.inventory;
@@ -73,15 +77,9 @@ self:set_angle(0);
 self:set_restitution(0);
 
 function update_sprite()
-    local color_1 = 0xffffff;
-    local color_2 = Color:rgba(0,0,0,0);
-
-    if facing_left then
-        color_1,color_2 = color_2,color_1;
-    end;
-
-    sprite_1:set_color(color_1);
-    sprite_2:set_color(color_2);
+    local imgs = sprite:get_images();
+    imgs[1].flip_x = facing_left;
+    sprite:set_images(imgs);
 end;
 
 function switch_to_flingstick()
@@ -91,12 +89,13 @@ function switch_to_flingstick()
         weapon:destroy();
         weapon = nil;
     end;
+    selected_weapon = "flingstick";
 
     local spawn_flingstick = require('./packages/@carroted/pylon_recon/lib/spawn_flingstick.lua');
     local flingstick = spawn_flingstick(self:get_position());
 
     weapon = flingstick;
-    weapon:temp_set_collides(false);
+    weapon:set_collision_layers({});
     weapon:set_body_type(BodyType.Static);
 end;
 
@@ -104,7 +103,6 @@ function switch_to_none()
     if weapon_player_joint ~= nil then
         weapon_player_joint:destroy();
         weapon_player_joint = nil;
-        weapon_ground_joint = nil;
     end;
 
     if weapon ~= nil then
@@ -114,13 +112,19 @@ function switch_to_none()
         weapon:destroy();
         weapon = nil;
     end;
-    if ground ~= nil then
-        ground:destroy();
-    end;
-    ground = nil;
+    selected_weapon = nil;
 
-    weapon_ground_joint = nil;
+    if pin ~= nil then
+        pin:destroy();
+        pin = nil;
+    end;
+
     weapon_blocking_movement = false;
+
+    if weapon_ground_joint ~= nil then
+        weapon_ground_joint:destroy();
+    end;
+    weapon_ground_joint = nil;
 end;
 
 -- Events
@@ -128,11 +132,13 @@ end;
 function on_event(id, data)
     if id == "@carroted/pylon_recon/weapon/pickup" then
         if weapon == nil then
-            weapon = Scene:get_object_by_guid(data.guid);
-            weapon:temp_set_collides(false);
+            weapon = data.object;
+            weapon_offset = data.weapon.offset;
+            weapon:set_collision_layers({});
             weapon:set_body_type(BodyType.Static);
+            selected_weapon = data.weapon.id;
         else
-            Scene:get_object_by_guid(data.guid):destroy();
+            --data.object:destroy();
         end;
         print(data.weapon.id);
         inventory[data.weapon.id] = true;
@@ -163,7 +169,7 @@ function update_weapon()
         weapon:set_position(player_pos + weapon_offset);
 
         -- Adjust rotation to use the player position as the pivot
-        local world_position = Input:pointer_pos();
+        local world_position = player:pointer_pos();
         local angle = math.atan2(world_position.y - player_pos.y, world_position.x - player_pos.x)
         
         -- Set weapon's angle
@@ -181,7 +187,7 @@ function update_weapon()
         end;
     elseif (weapon ~= nil) and (weapon_player_joint ~= nil) then
         local player_pos = self:get_position() + vec2(0, -0.114);
-        local world_position = Input:pointer_pos();
+        local world_position = player:pointer_pos();
         local angle = math.atan2(world_position.y - player_pos.y, world_position.x - player_pos.x) % math.rad(360);
 
         local current_angle = weapon:get_angle() % math.rad(360);
@@ -205,33 +211,33 @@ end;
 function on_update()
     self:set_angle(self_component:get_property("z_angle").value);
 
-    Camera:set_position(camera_pos);
-    Camera:set_orthographic_scale(camera_zoom);
+    player:set_camera_position(camera_pos);
+    player:set_camera_zoom(camera_zoom);
 
     local current_vel = self:get_linear_velocity();
     local update_vel = false;
 
-    if Input:key_just_pressed("1") then
+    if player:key_just_pressed("1") then
         switch_to_none();
     end;
-    if Input:key_just_pressed("2") then
+    if player:key_just_pressed("2") then
         switch_to_flingstick();
     end;
 
-    if Input:key_just_pressed("Q") then
+    if player:key_just_pressed("Q") then
         debug = not debug;
     end;
 
     local prev_facing_left = facing_left;
 
-    if Input:key_pressed("D") then
+    if player:key_pressed("D") then
         if current_vel.x < speed then
             current_vel.x = speed;
             update_vel = true;
         end;
         facing_left = false;
     end;
-    if Input:key_pressed("A") then
+    if player:key_pressed("A") then
         if current_vel.x > -speed then
             current_vel.x = -speed;
             update_vel = true;
@@ -245,7 +251,7 @@ function on_update()
 
     local grounded = ground_check();
 
-    if Input:key_pressed("W") and grounded then
+    if player:key_pressed("W") and grounded then
         if current_vel.y < jump_force then
             current_vel.y = jump_force;
             update_vel = true;
@@ -258,55 +264,62 @@ function on_update()
 
     update_weapon();
 
-    if (Input:pointer_just_pressed()) and (weapon ~= nil) then
-        ground = Scene:add_circle({
-            position = weapon:get_position(),
-            color = Color:rgba(0,0,0,0),
-            is_static = true,
-            radius = 0.1
-        });
-        ground:temp_set_collides(false);
-        Scene:add_attachment({
-            name = "Image",
-            component = {
+    if (player:pointer_just_pressed()) and (weapon ~= nil) then
+        if selected_weapon == "flingstick" then
+            pin = Scene:add_attachment({
                 name = "Image",
-                code = nil,
-            },
-            parent = ground,
-            local_position = vec2(0, 0),
-            local_angle = 0,
-            image = "./packages/@carroted/pylon_recon/assets/textures/pin.png",
-            size = 1 / 12,
-            color = Color:hex(0xffffff),
-        });
+                parent = nil,
+                local_position = weapon:get_position(),
+                local_angle = 0,
+                images = {{
+                    texture = require("./packages/@carroted/pylon_recon/assets/textures/pin.png"),
+                    scale = vec2(1/12, 1/12),
+                }},
+            });
 
-        weapon_player_joint = Scene:add_hinge_at_world_point({
-            point = self:get_position() + vec2(0, -0.114),
-            object_a = self,
-            object_b = weapon,
-        });
+            weapon_player_joint = Scene:add_hinge({
+                local_anchor_a = self:get_local_point(self:get_position() + vec2(0, -0.114)),
+                local_anchor_b = weapon:get_local_point(self:get_position() + vec2(0, -0.114)),
+                object_a = self,
+                object_b = weapon,
+            });
 
-        weapon_ground_joint = Scene:add_hinge_at_world_point({
-            point = weapon:get_position(),
-            object_a = ground,
-            object_b = weapon,
-        });
+            weapon_ground_joint = Scene:add_hinge({
+                local_anchor_a = weapon:get_position(),
+                local_anchor_b = vec2(0, 0),
+                object_b = weapon,
+            });
 
-        weapon:set_body_type(BodyType.Dynamic);
+            weapon:set_body_type(BodyType.Dynamic);
 
-        weapon:send_event("@carroted/pylon_recon/weapon/set_overlay_enabled", {
-            enabled = true,
-        });
+            weapon:send_event("@carroted/pylon_recon/weapon/set_overlay_enabled", {
+                enabled = true,
+            });
 
-        weapon_blocking_movement = true;
+            weapon_blocking_movement = true;
+        end;
     end;
 
-    if not (Input:pointer_pressed()) and (weapon_player_joint ~= nil) then
-        ground:destroy();
-        ground = nil;
+    if (player:pointer_pressed()) and (weapon ~= nil) then
+        if selected_weapon ~= "flingstick" then
+            weapon:send_event("@carroted/pylon_recon/weapon/fire", player:pointer_pos());
+        end;
+    end;
+
+    if not (player:pointer_pressed()) and (weapon_player_joint ~= nil) then
         weapon_player_joint:destroy();
         weapon_player_joint = nil;
+
+        if pin ~= nil then
+            pin:destroy();
+            pin = nil;
+        end;
+
+        if weapon_ground_joint ~= nil then
+            weapon_ground_joint:destroy();
+        end;
         weapon_ground_joint = nil;
+
         weapon:set_body_type(BodyType.Static);
         weapon:send_event("@carroted/pylon_recon/weapon/set_overlay_enabled", {
             enabled = false,
@@ -322,18 +335,21 @@ function get_ground_check_rays()
             direction = vec2(0, -1),
             distance = (2 / 12) + 0.01,
             closest_only = false,
+            collision_layers = self:get_collision_layers(),
         },
         [2] = {
             origin = self:get_position() + vec2((5.5 * (1 / 12)) + 0.01, -4 * (1 / 12)),
             direction = vec2(0, -1),
             distance = (2 / 12) + 0.01,
             closest_only = false,
+            collision_layers = self:get_collision_layers(),
         },
         [3] = {
             origin = self:get_position() + vec2((-5.5 * (1 / 12)) - 0.01, (-4 * (1 / 12)) - (2 / 12) - 0.01),
             direction = vec2(1, 0),
             distance = (11 * (1 / 12)) + 0.02,
             closest_only = false,
+            collision_layers = self:get_collision_layers(),
         },
     };
 end;
@@ -364,8 +380,8 @@ function on_step()
 
     camera_pos = lerp_vec2(camera_pos, self:get_position(), 0.08);
 
-    Camera:set_position(camera_pos);
-    Camera:set_orthographic_scale(camera_zoom);
+    player:set_camera_position(camera_pos);
+    player:set_camera_zoom(camera_zoom);
 end;
 
 function ground_check()
@@ -374,6 +390,7 @@ function ground_check()
         local circle = Scene:get_objects_in_circle({
             position = circles[i],
             radius = 0,
+            collision_layers = self:get_collision_layers(),
         });
         for i=1,#circle do
             if circle[i]:get_name() ~= "nojump" then

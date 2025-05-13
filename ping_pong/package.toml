@@ -1,3 +1,4 @@
 [package]
 name = "Ping Pong"
 version = "0.1.0"
+description = "Revolutionary ball game"

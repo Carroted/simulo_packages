@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "simulo",
+            "request": "launch",
+            "name": "Run Simulo Lua file",
+            "program": "./scripts/test_room/main.lua",
+            "focus": true
+        }
+    ]
+}

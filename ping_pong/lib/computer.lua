@@ -6,28 +6,90 @@ local ball_light_intensity = 1;
 local ball_restitution = 1;
 local ball_attachment = nil;
 
-function on_event(id, data)
-    if id == "@carroted/ping_pong/ball" then
-        ball = Scene:get_object_by_guid(data.guid);
-        Scene:add_attachment({
+local computer_display = nil;
+local player_display = nil;
+
+local hit_first_time = true;
+local hit_right = math.random() > 0.5;
+local hit_first_time_delay = 50;
+local hit_first_time_counter = hit_first_time_delay;
+
+local player_score = 0;
+local computer_score = 0;
+
+function on_start(saved_data)
+    if saved_data.ball then
+        ball = saved_data.ball;
+    end;
+    if saved_data.speed then
+        speed = saved_data.speed;
+    end;
+    if saved_data.ball_power then
+        ball_power = saved_data.ball_power;
+    end;
+    if saved_data.ball_light_intensity then
+        ball_light_intensity = saved_data.ball_light_intensity;
+    end;
+    if saved_data.ball_restitution then
+        ball_restitution = saved_data.ball_restitution;
+    end;
+    if saved_data.hit_first_time then
+        hit_first_time = saved_data.hit_first_time;
+    end;
+    if saved_data.player_score then
+        player_score = saved_data.player_score;
+    end;
+    if saved_data.computer_score then
+        computer_score = saved_data.computer_score;
+    end;
+    if saved_data.computer_display then
+        computer_display = saved_data.computer_display;
+    else
+        set_computer_display(0);
+    end;
+    if saved_data.player_display then
+        player_display = saved_data.player_display;
+    else
+        set_player_display(0);
+    end;
+    if saved_data.attachment then
+        ball_attachment = saved_data.attachment;
+    else
+        ball_attachment = Scene:add_attachment({
             name = "Point Light",
             component = {
                 name = "Point Light",
-                code = nil,
+                code = "",
+                version = "0.1.0",
+                id = "wanda",
             },
             parent = ball,
             local_position = vec2(0, 0),
             local_angle = 0,
-            image = "./packages/core/assets/textures/point_light.png",
-            size = 0.001,
-            color = Color:rgba(0,0,0,0),
-            light = {
+            lights = {{
                 color = Color:hex(0xffb36b),
                 intensity = ball_power,
                 radius = 2,
-            }
+            }},
+            collider = { shape_type = "circle", radius = 0.1, }
         });
     end;
+end;
+
+function on_save()
+    return {
+        ball = ball,
+        attachment = ball_attachment,
+        hit_first_time = hit_first_time,
+        player_score = player_score,
+        computer_score = computer_score,
+        computer_display = computer_display,
+        player_display = player_display,
+        speed = speed,
+        ball_power = ball_power,
+        ball_light_intensity = ball_light_intensity,
+        ball_restitution = ball_restitution,
+    };
 end;
 
 -- Segment patterns for each digit, true means the segment is on
@@ -170,9 +232,9 @@ local function draw_digit(pos, size, color, digit)
                     position = pos + offset,
                     size = vec2(size / 2, size / 2),
                     color = color,
-                    is_static = true,
+                    body_type = BodyType.Static,
+                    collision_layers = {},
                 });
-                box:temp_set_collides(false);
                 table.insert(objects, {
                     obj = box,
                     offset = offset,
@@ -216,13 +278,11 @@ function move_display(objects, new_pos)
     end
 end;
 
-local computer_display = nil;
-local player_display = nil;
 
 function set_player_display(value)
     if player_display ~= nil then
         for _, data in ipairs(player_display) do
-            if not data.obj:is_destroyed() then
+            if Scene:get_object(data.obj.id) ~= nil then
                 data.obj:destroy();
             end;
         end;
@@ -234,7 +294,7 @@ end;
 function set_computer_display(value)
     if computer_display ~= nil then
         for _, data in ipairs(computer_display) do
-            if not data.obj:is_destroyed() then
+            if Scene:get_object(data.obj.id) ~= nil then
                 data.obj:destroy();
             end;
         end;
@@ -243,22 +303,11 @@ function set_computer_display(value)
     move_display(computer_display, vec2(0, 1.7));
 end;
 
-local player_score = 0;
-local computer_score = 0;
-
-set_player_display(0);
-set_computer_display(0);
-
-local hit_first_time = true;
-local hit_right = math.random() > 0.5;
-local hit_first_time_delay = 50;
-local hit_first_time_counter = hit_first_time_delay;
-
 function on_update()
     speed = self_component:get_property("speed").value;
     
     if ball == nil then return; end;
-    if ball:is_destroyed() then return; end;
+    if Scene:get_object(ball.id) == nil then return; end;
 
     local ball_pos = ball:get_position();
     local self_pos = self:get_position();
@@ -270,22 +319,8 @@ function on_update()
         ball_restitution += 0.15;
         ball_light_intensity *= 10;
         ball:set_restitution(ball_restitution);
-        if ball_attachment ~= nil then
-            ball_attachment:destroy();
-        end;
-        ball_attachment = Scene:add_attachment({
-            name = "Point Light",
-            component = {
-                name = "Point Light",
-                code = nil,
-            },
-            parent = ball,
-            local_position = vec2(0, 0),
-            local_angle = 0,
-            image = "./packages/core/assets/textures/point_light.png",
-            size = 0.001,
-            color = Color:rgba(0,0,0,0),
-            light = {
+        ball_attachment:set_lights({
+            {
                 color = Color:hex(0xffb36b),
                 intensity = ball_power,
                 radius = 2,
@@ -361,22 +396,8 @@ function reset_ball_power()
     ball_restitution = 1;
     ball_light_intensity = 1;
     ball:set_restitution(ball_restitution);
-    if ball_attachment ~= nil then
-        ball_attachment:destroy();
-    end;
-    ball_attachment = Scene:add_attachment({
-        name = "Point Light",
-        component = {
-            name = "Point Light",
-            code = nil,
-        },
-        parent = ball,
-        local_position = vec2(0, 0),
-        local_angle = 0,
-        image = "./packages/core/assets/textures/point_light.png",
-        size = 0.001,
-        color = Color:rgba(0,0,0,0),
-        light = {
+    ball_attachment:set_lights({
+        {
             color = Color:hex(0xffb36b),
             intensity = ball_light_intensity,
             radius = 2,

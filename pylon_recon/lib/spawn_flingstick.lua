@@ -3,28 +3,24 @@ local function spawn_flingstick(pos)
         position = pos,
         size = vec2(34/12, 5/12),
         color = Color:rgba(0,0,0,0),
-        is_static = false,
     });
 
     Scene:add_attachment({
         name = "Image",
-        component = {
-            name = "Image",
-            code = nil,
-        },
         parent = flingstick,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "./packages/@carroted/pylon_recon/assets/textures/weapons/flingstick.png",
-        size = 1 / 12,
-        color = Color:hex(0xffffff),
+        images = {{
+            texture = require("./packages/@carroted/pylon_recon/assets/textures/weapons/flingstick.png"),
+            scale = vec2(1/12, 1/12),
+        }},
     });
 
-    local hash = Scene:add_component({
+    local hash = Scene:add_component_def({
         name = "Weapon",
         id = "@carroted/pylon_recon/weapon",
         version = "0.1.0",
-        code = require('./packages/@carroted/pylon_recon/lib/weapon.lua', 'string')
+        code = require('./packages/@carroted/pylon_recon/lib/weapons/flingstick.lua', 'string')
     });
 
     flingstick:add_component({ hash = hash });

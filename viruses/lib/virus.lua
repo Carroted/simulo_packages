@@ -7,35 +7,18 @@ local shake_speed = 1;
 local takeover_to = 1;
 local takeover_equal = false;
 
-local colliding_objects = {};
-
 local virus_data = nil;
 
 function lerp(a, b, t)
     return a + t * (b - a)
 end
 
-function on_collision_start(data)
-    table.insert(colliding_objects, data.other);
-end;
-
-function on_collision_end(data)
-    for i, obj in ipairs(colliding_objects) do
-        if obj.guid == data.other.guid then
-            table.remove(colliding_objects, i);
-            break;
-        end
-    end
-end;
-
 function on_collision_stay(obj)
     if math.random() < takeover then
         if obj:get_body_type() == BodyType.Dynamic then
             virus_data = nil;
 
-            obj:send_event("@carroted/viruses/request_data", {
-                guid = self.guid,
-            });
+            obj:send_event("@carroted/viruses/request_data", self);
 
             if virus_data ~= nil then
                 if (
@@ -55,17 +38,8 @@ function on_collision_stay(obj)
 
             if virus_data == nil then
                 obj:add_component({ hash = self_component.hash });
-                print('added a realer');
-                obj:send_event("@carroted/viruses/request_data", {
-                    guid = self.guid,
-                });
-                obj:send_event("@carroted/viruses/request_data", {
-                    guid = self.guid,
-                });
-                obj:send_event("@carroted/viruses/request_data", {
-                    guid = self.guid,
-                });
-                print('event done');
+                print('Virus spread to new object');
+                obj:send_event("@carroted/viruses/request_data", self);
             end;
             virus_data.takeover_equal = takeover_equal;
             virus_data.takeover = lerp(virus_data.takeover, takeover_to, 1 / 60 / 2 / shake_speed);
@@ -91,8 +65,10 @@ function on_collision_stay(obj)
 end;
 
 function on_step()
+    local colliding_objects = self:get_touching();
+
     for i=1,#colliding_objects do
-        if not colliding_objects[i]:is_destroyed() then
+        if Scene:get_object(colliding_objects[i].id) ~= nil then
             on_collision_stay(colliding_objects[i]);
         end;
     end;
@@ -106,14 +82,35 @@ function on_step()
     end;
 end;
 
-function on_start()
-    print('start');
+function on_start(saved_data)
+    if saved_data then
+        takeover = saved_data.takeover;
+        color = saved_data.color;
+        shake = saved_data.shake;
+        color_change = saved_data.color_change;
+        mutation_amount = saved_data.mutation_amount;
+        shake_speed = saved_data.shake_speed;
+        takeover_to = saved_data.takeover_to;
+        takeover_equal = saved_data.takeover_equal;
+    end;
+end;
+
+function on_save()
+    return {
+        takeover = takeover,
+        color = color,
+        shake = shake,
+        color_change = color_change,
+        mutation_amount = mutation_amount,
+        shake_speed = shake_speed,
+        takeover_to = takeover_to,
+        takeover_equal = takeover_equal,
+    };
 end;
 
 function on_event(id, data)
     if id == "@carroted/viruses/request_data" then
-        print('data requested')
-        Scene:get_object_by_guid(data.guid):send_event("@carroted/viruses/response_data", {
+        data:send_event("@carroted/viruses/response_data", {
             takeover = takeover,
             color = color,
             shake = shake,
@@ -134,6 +131,5 @@ function on_event(id, data)
         shake_speed = data.shake_speed;
         takeover_to = data.takeover_to;
         takeover_equal = data.takeover_equal;
-        print('data')
     end;
 end;

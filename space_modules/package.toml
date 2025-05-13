@@ -1,0 +1,4 @@
+[package]
+name = "Space Modules"
+version = "0.1.0"
+description = "You can make rovers and spacecrafts"

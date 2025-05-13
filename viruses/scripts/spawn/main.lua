@@ -1,15 +1,42 @@
 local ball = Scene:add_circle({
     position = vec2(0, 0),
     color = Color:hex(0x9f6ae8),
-    is_static = false,
     radius = 0.25,
+    name = "Hivemind Virus"
 });
 
-local hash = Scene:add_component({
+local hash = Scene:add_component_def({
     name = "Virus",
     id = "@carroted/viruses/virus",
     version = "0.1.0",
-    code = require('./packages/@carroted/viruses/lib/virus.lua', 'string')
+    code = require('./packages/@carroted/viruses/lib/virus.lua', 'string'),
+    --[[properties = {
+        {
+            id = "color",
+            name = "Color",
+            input_type = "color",
+            default_value = 0,
+        },
+        {
+            id = "color",
+            name = "Color",
+            input_type = "color",
+            default_value = 0,
+        },
+        {
+            id = "color",
+            name = "Color",
+            input_type = "color",
+            default_value = 0,
+        },
+        {
+            id = "color",
+            name = "Color",
+            input_type = "color",
+            default_value = 0,
+        },
+
+    },]]
 });
 
 ball:add_component({ hash = hash });
@@ -30,6 +57,7 @@ local ball = Scene:add_circle({
     color = Color:hex(0xe8704c),
     is_static = false,
     radius = 0.25,
+    name = "Pain Virus"
 });
 
 ball:add_component({ hash = hash });

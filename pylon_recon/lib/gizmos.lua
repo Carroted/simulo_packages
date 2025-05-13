@@ -15,7 +15,7 @@ function gizmo_circle(pos, color, radius)
     local c = Scene:add_circle({
         position = pos,
         radius = radius,
-        is_static = true,
+        body_type = BodyType.Static,
         color = color,
     });
     c:temp_set_collides(false);

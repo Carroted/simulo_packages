@@ -8,23 +8,20 @@ local function spawn_gun(pos)
 
     Scene:add_attachment({
         name = "Image",
-        component = {
-            name = "Image",
-            code = nil,
-        },
         parent = gun,
         local_position = vec2(0, 1/12),
         local_angle = 0,
-        image = "./packages/@carroted/pylon_recon/assets/textures/weapons/gun.png",
-        size = 1 / 12,
-        color = Color:hex(0xffffff),
+        images = {{
+            texture = require("./packages/@carroted/pylon_recon/assets/textures/weapons/gun.png"),
+            scale = vec2(1/12, 1/12),
+        }},
     });
 
-    local hash = Scene:add_component({
+    local hash = Scene:add_component_def({
         name = "Weapon",
         id = "@carroted/pylon_recon/weapon",
         version = "0.1.0",
-        code = require('./packages/@carroted/pylon_recon/lib/weapon.lua', 'string')
+        code = require('./packages/@carroted/pylon_recon/lib/weapons/gun.lua', 'string')
     });
 
     gun:add_component({ hash = hash });

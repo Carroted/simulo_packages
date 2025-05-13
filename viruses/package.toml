@@ -1,3 +1,4 @@
 [package]
 name = "Viruses"
 version = "0.1.0"
+description = "Circles that can spread color infections or pain across the entire worlds"
