@@ -1,3 +1,4 @@
 [package]
-name = "Pylon Recon"
-version = "0.1.0"
+name = "Pylon Recon Demo"
+version = "0.1.1"
+description = "eventually the demo will have PVP and multiplayer. eventually we will then make a full game out of this, released standalone as its own steam game. only way after simu release though"

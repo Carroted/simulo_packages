@@ -2,7 +2,7 @@ local ground = Scene:reset();
 ground:set_restitution(0);
 ground:set_color(0xcccccc);
 Scene:set_background_color(0);
-Scene:set_bloom(true);
+Scene:set_bloom_threshold(0);
 
 Scene:set_ambient_light_intensity(0)
 

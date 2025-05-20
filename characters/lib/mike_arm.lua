@@ -1,4 +1,5 @@
-local hinge = require('core/lib/hinge.lua');
+local stick = require('@carroted/characters/assets/sounds/stick6.flac');
+local release = require('@carroted/characters/assets/sounds/release.flac');
 
 local normal_color = Color:hex(0x423847);
 local sticky_color = Color:hex(0x8ec25e);
@@ -25,6 +26,13 @@ function on_update()
         if sticky then
             self:set_color(sticky_color);
         else
+            if #sticky_hinges ~= 0 then
+                Scene:add_audio({
+                    asset = release,
+                    position = self:get_position(),
+                });
+            end;
+
             for i=1,#sticky_hinges do
                 sticky_hinges[i]:destroy();
             end;
@@ -81,8 +89,16 @@ end;
 
 function on_hit(data)
     if sticky then
-        table.insert(sticky_hinges, hinge({
-            point = data.point,
+        if #sticky_hinges == 0 then
+            Scene:add_audio({
+                asset = stick,
+                position = data.point,
+            });
+        end;
+
+        table.insert(sticky_hinges, Scene:add_hinge({
+            local_anchor_a = self:get_local_point(data.point),
+            local_anchor_b = data.other:get_local_point(data.point),
             object_a = self,
             object_b = data.other,
             motor_enabled = false,

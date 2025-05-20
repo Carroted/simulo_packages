@@ -18,8 +18,6 @@ function spawn_mike(position)
         position = position,
     });
 
-    local objs = Scene:get_all_objects();
-
     local head = parts.head;
     local body = parts.body;
 
@@ -207,31 +205,20 @@ function add_empire_icon(position, size, color)
 end;
 
 function spawn_moderizer(position)
-    simulon({
+    local parts = simulon({
         color = Color:hex(0xe55f50),
         size = 1,
         density = 1,
         position = position,
     });
 
-    local objs = Scene:get_all_objects();
-
-    local head = nil;
-    local body = nil;
-    for i=1,#objs do
-        local obj = objs[i];
-        if (obj:get_color().r == 229 and obj:get_color().g == 95 and obj:get_color().b == 80) and (obj:get_name() == "Simulon Head") then
-            head = obj;
-        end;
-        if (obj:get_color().r == 229 and obj:get_color().g == 95 and obj:get_color().b == 80) and (obj:get_name() == "Simulon Body Part 1") then
-            body = obj;
-        end;
-    end;
+    local head = parts.head;
+    local body = parts.body;
 
     local eye1 = Scene:add_circle({
         color = Color:hex(0x5e2a28),
         radius = 0.053,
-        position = position + vec2(-0.102, 0.6707),
+        position = position + vec2(-0.102, 0.6707 - 0.05),
         is_static = false, 
     });
     eye1:set_density(0.1);
@@ -239,48 +226,57 @@ function spawn_moderizer(position)
     local eye2 = Scene:add_circle({
         color = Color:hex(0x5e2a28),
         radius = 0.053,
-        position = position + vec2(0.102, 0.6707),
+        position = position + vec2(0.102, 0.6707 - 0.05),
         is_static = false,
     });
     eye2:set_density(0.1);
 
-    eye1:bolt_to(head);
-    eye2:bolt_to(head);
+    Scene:add_bolt({
+        object_a = eye1,
+        object_b = head,
+        local_anchor_a = vec2(0, 0),
+        local_anchor_b = head:get_local_point(eye1:get_position()),
+    });
+    Scene:add_bolt({
+        object_a = eye2,
+        object_b = head,
+        local_anchor_a = vec2(0, 0),
+        local_anchor_b = head:get_local_point(eye2:get_position()),
+    });
 
     local hexagons = add_empire_icon(position + vec2(-0.115, 0.175), 0.032, Color:hex(0x96352b));
     for i=1,#hexagons do
-        hexagons[i]:bolt_to(body);
+        Scene:add_bolt({
+            object_a = hexagons[i],
+            object_b = body,
+            local_anchor_a = vec2(0, 0),
+            local_anchor_b = body:get_local_point(hexagons[i]:get_position()),
+        });
     end;
 end;
 
 spawn_moderizer(vec2(4, -9.7));
 
 function spawn_emperor(position)
-    Scene:add_simulon({
+    local parts = simulon({
         color = Color:hex(0xe07641),
         size = 1.536,
         density = 1,
         position = position,
     });
 
-    local objs = Scene:get_all_objects();
-
-    local head = nil;
-    local body = nil;
-    for i=1,#objs do
-        local obj = objs[i];
-        if (obj:get_color().r == 224 and obj:get_color().g == 118 and obj:get_color().b == 65) and (obj:get_name() == "Simulon Head") then
-            head = obj;
-        end;
-        if (obj:get_color().r == 224 and obj:get_color().g == 118 and obj:get_color().b == 65) and (obj:get_name() == "Simulon Body Part 1") then
-            body = obj;
-        end;
-    end;
+    local head = parts.head;
+    local body = parts.body;
 
     local hexagons = add_empire_icon(head:get_position(), 0.088, Color:hex(0xb85b37));
     for i=1,#hexagons do
         hexagons[i]:set_density(0.1);
-        hexagons[i]:bolt_to(head);
+        Scene:add_bolt({
+            object_a = hexagons[i],
+            object_b = head,
+            local_anchor_a = vec2(0, 0),
+            local_anchor_b = head:get_local_point(hexagons[i]:get_position()),
+        });
     end;
     print("did it for " .. tostring(#hexagons) .. " hexagons");
 
@@ -288,112 +284,108 @@ function spawn_emperor(position)
 
     local right_part1 = Scene:add_capsule({
         position = position,
-        local_point_a = vec2(0.48, 1.085),
-        local_point_b = vec2(0.48, 1.7),
+        local_point_a = vec2(0.48, 1.085 - 1.35),
+        local_point_b = vec2(0.48, 1.7 - 1.35),
         color = armor_color,
-        is_static = false,
         radius = 0.075,
     });
-    right_part1:bolt_to(body);
+    Scene:add_bolt({
+        object_a = body,
+        object_b = right_part1,
+        local_anchor_a = vec2(0, 0),
+        local_anchor_b = right_part1:get_local_point(body:get_position()),
+    });
     local part2 = Scene:add_capsule({
         position = position,
-        local_point_a = vec2(0.48, 1.7),
-        local_point_b = vec2(0.38, 1.92),
+        local_point_a = vec2(0.48, 1.7 - 1.35),
+        local_point_b = vec2(0.38, 1.92 - 1.35),
         color = armor_color,
-        is_static = false,
         radius = 0.075,
     });
-    part2:bolt_to(body);
+    Scene:add_bolt({
+        object_a = body,
+        object_b = part2,
+        local_anchor_a = vec2(0, 0),
+        local_anchor_b = part2:get_local_point(body:get_position()),
+    });
     local part3 = Scene:add_capsule({
         position = position,
-        local_point_a = vec2(0.38, 1.92),
-        local_point_b = vec2(0.36, 1.94),
+        local_point_a = vec2(0.38, 1.92 - 1.35),
+        local_point_b = vec2(0.36, 1.94 - 1.35),
         color = armor_color,
-        is_static = false,
         radius = 0.075,
     });
-
-    part3:bolt_to(body);
-
-    hinge({
-        object_a = part3,
-        object_b = Scene:add_circle({
-            position = position + vec2(0.36, 1.94),
-            color = Color:rgba(0,0,0,0),
-            is_static = false,
-            radius = 0.075,
-        }),
-        point = position + vec2(0.36, 1.94),
-        motor_enabled = true,
-        motor_speed = 0, -- radians per second
-        max_motor_torque = 1.25,
+    Scene:add_bolt({
+        object_a = body,
+        object_b = part3,
+        local_anchor_a = vec2(0, 0),
+        local_anchor_b = part3:get_local_point(body:get_position()),
     });
 
     local left_part1 = Scene:add_capsule({
         position = position,
-        local_point_a = vec2(-0.48, 1.085),
-        local_point_b = vec2(-0.48, 1.7),
+        local_point_a = vec2(-0.48, 1.085 - 1.35),
+        local_point_b = vec2(-0.48, 1.7 - 1.35),
         color = armor_color,
-        is_static = false,
         radius = 0.075,
     });
-    left_part1:bolt_to(body);
+    Scene:add_bolt({
+        object_a = body,
+        object_b = left_part1,
+        local_anchor_a = vec2(0, 0),
+        local_anchor_b = left_part1:get_local_point(body:get_position()),
+    });
     local part2 = Scene:add_capsule({
         position = position,
-        local_point_a = vec2(-0.48, 1.7),
-        local_point_b = vec2(-0.38, 1.92),
+        local_point_a = vec2(-0.48, 1.7 - 1.35),
+        local_point_b = vec2(-0.38, 1.92 - 1.35),
         color = armor_color,
-        is_static = false,
         radius = 0.075,
     });
-    part2:bolt_to(body);
+    Scene:add_bolt({
+        object_a = body,
+        object_b = part2,
+        local_anchor_a = vec2(0, 0),
+        local_anchor_b = part2:get_local_point(body:get_position()),
+    });
     local part3 = Scene:add_capsule({
         position = position,
-        local_point_a = vec2(-0.38, 1.92),
-        local_point_b = vec2(-0.36, 1.94),
+        local_point_a = vec2(-0.38, 1.92 - 1.35),
+        local_point_b = vec2(-0.36, 1.94 - 1.35),
         color = armor_color,
         is_static = false,
         radius = 0.075,
     });
-
-    part3:bolt_to(body);
-
-    hinge({
-        object_a = part3,
-        object_b = Scene:add_circle({
-            position = position + vec2(-0.36, 1.94),
-            color = Color:rgba(0,0,0,0),
-            is_static = false,
-            radius = 0.075,
-        }),
-        point = position + vec2(-0.36, 1.94),
-        motor_enabled = true,
-        motor_speed = 0, -- radians per second
-        max_motor_torque = 1.25,
+    Scene:add_bolt({
+        object_a = body,
+        object_b = part3,
+        local_anchor_a = vec2(0, 0),
+        local_anchor_b = part3:get_local_point(body:get_position()),
     });
 
     local right_laser_box = Scene:add_box({
-        position = position + vec2(0.13 + 0.48, 0.19 + 1.3925),
+        position = position + vec2(0.13 + 0.48, 0.19 + 1.3925 - 1.35),
         size = vec2(0.47, 252 * (0.47 / 512)),
         color = Color:rgba(0,0,0,0),
-        is_static = false,
     });
 
     Scene:add_attachment({
         name = "Image",
-        component = {
-            name = "Image",
-            code = nil,
-        },
         parent = right_laser_box,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "./packages/@carroted/characters/assets/emperor_laser.png",
-        size = 0.47 / 512,
-        color = Color:hex(0xffffff),
+        images = {{
+            texture = require("./packages/@carroted/characters/assets/emperor_laser.png"),
+            scale = vec2(0.47/512, 0.47/512),
+        }},
     });
 
-    right_laser_box:bolt_to(right_part1);
+    Scene:add_bolt({
+        object_a = right_part1,
+        object_b = right_laser_box,
+        local_anchor_a = vec2(0, 0),
+        local_anchor_b = right_laser_box:get_local_point(right_part1:get_position()),
+    });
 
     local hash = Scene:add_component_def({
         name = "Emperor Laser",
@@ -405,27 +397,31 @@ function spawn_emperor(position)
     right_laser_box:add_component({ hash = hash });
 
     local left_laser_box = Scene:add_box({
-        position = position + vec2(-0.13 - 0.48, 0.19 + 1.3925),
+        position = position + vec2(-0.13 - 0.48, 0.19 + 1.3925 - 1.35),
         size = vec2(0.47, 252 * (0.47 / 512)),
         color = Color:rgba(0,0,0,0),
         is_static = false,
     });
 
     left_laser_box:set_angle(math.rad(180));
-    left_laser_box:bolt_to(left_part1);
+
+    Scene:add_bolt({
+        object_a = left_part1,
+        object_b = left_laser_box,
+        local_anchor_a = vec2(0, 0),
+        local_anchor_b = left_laser_box:get_local_point(left_part1:get_position()),
+        reference_angle =left_laser_box:get_angle() -  left_part1:get_angle(),
+    });
 
     Scene:add_attachment({
         name = "Image",
-        component = {
-            name = "Image",
-            code = nil,
-        },
         parent = left_laser_box,
         local_position = vec2(0, 0),
         local_angle = 0,
-        image = "./packages/@carroted/characters/assets/emperor_laser.png",
-        size = 0.47 / 512,
-        color = Color:hex(0xffffff),
+        images = {{
+            texture = require("./packages/@carroted/characters/assets/emperor_laser.png"),
+            scale = vec2(0.47/512, 0.47/512),
+        }},
     });
 
     --left_laser_box:bolt_to(left_part1);

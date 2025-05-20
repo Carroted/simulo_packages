@@ -1,13 +1,30 @@
 local beam_color = Color:hex(0xe07641);
 
+local player = Scene:get_host();
+
 local target_beam_length = 3.5;
 local beam_length = 0;
 local beam_speed = 0.2;
 
+local crackle = Scene:add_audio({
+    asset = require('@carroted/characters/assets/sounds/static3.flac'),
+    position = self:get_position(),
+    looping = true,
+    volume = 0,
+    pitch = 2,
+});
+local crackle2 = Scene:add_audio({
+    asset = require('core/assets/sounds/spark.flac'),
+    position = self:get_position(),
+    looping = true,
+    volume = 0,
+    pitch = 1.1,
+});
+
 local enabled = false;
 
 function on_update()
-    if Input:key_just_pressed("1") then
+    if player:key_just_pressed("F") then
         enabled = not enabled;
     end;
 end;
@@ -27,10 +44,10 @@ function gizmo_circle(pos, color, r)
     local c = Scene:add_circle({
         position = pos,
         radius = r,
-        is_static = true,
+        body_type = BodyType.Static,
+        collision_layers = {},
         color = color,
     });
-    c:temp_set_collides(false);
     table.insert(gizmos, c);
     return c;
 end;
@@ -44,14 +61,18 @@ function draw_line(line_start, line_end, thickness, color, static, gizmo)
     local sx = (line_start - line_end):magnitude();
     local relative_line_end = line_end - pos;
     local rotation = math.atan(relative_line_end.y / relative_line_end.x)
+    local body_type = BodyType.Dynamic;
+    if static then
+        body_type = BodyType.Static;
+    end;
     local line = Scene:add_box({
         position = pos,
         size = vec2(sx, thickness),
-        is_static = static,
+        body_type = body_type,
+        collision_layers = {},
         color = color
     });
 
-    line:temp_set_collides(false);
     line:set_angle(rotation);
 
     if gizmo then
@@ -71,7 +92,7 @@ function on_step()
     if point_at_mouse then
         local self_pos = self:get_position();
 
-        local world_position = Input:pointer_pos();
+        local world_position = player:pointer_pos();
         local angle = math.atan2(world_position.y - self_pos.y, world_position.x - self_pos.x);
         
         self:set_angle(angle);
@@ -105,6 +126,7 @@ function on_step()
         direction = direction,
         distance = beam_length,
         closest_only = false,
+        collision_layers = self:get_collision_layers(),
     });
 
     local segments = 50;
@@ -119,41 +141,27 @@ function on_step()
             local line = draw_line(origin + (((direction * target_beam_length) / segments) * (i - 1)), origin + (((direction * target_beam_length) / segments) * i), 0.03, Color:mix(beam_color, unbeam, i / segments), true, false);
             Scene:add_attachment({
                 name = "Point Light",
-                component = {
-                    name = "Point Light",
-                    code = nil,
-                },
                 parent = line,
                 local_position = vec2(0, 0),
                 local_angle = 0,
-                image = "./packages/core/assets/textures/point_light.png",
-                size = 0.001,
-                color = Color:rgba(0,0,0,0),
-                light = {
+                lights = {{
                     color = Color:mix(beam_color, unbeam, i / segments),
                     intensity = 20 * (1 - (i / segments)),
                     radius = 0.18 * (1 - ((i / segments) * 0.5)),
-                }
+                }},
             });
             if i % 5 == 0 then
                 Scene:add_attachment({
                     name = "Point Light",
-                    component = {
-                        name = "Point Light",
-                        code = nil,
-                    },
                     parent = line,
                     local_position = vec2(0, 0),
                     local_angle = 0,
-                    image = "./packages/core/assets/textures/point_light.png",
-                    size = 0.001,
-                    color = Color:rgba(0,0,0,0),
-                    light = {
+                    lights = {{
                         color = Color:mix(beam_color, unbeam, i / segments),
                         intensity = 0.2 * (1 - ((i / segments) * 0.8)),
                         radius = 1.8,
                         falloff = 10,
-                    }
+                    }},
                 });
             end;
             table.insert(beam_parts, line);
@@ -192,11 +200,13 @@ function on_step()
         });
     end;]]
 
+    local hit_anything = false;
+
     local function hit_target(obj, point)
         if obj:get_body_type() ~= BodyType.Static then
             local lin_vel = obj:get_linear_velocity();
             local ang_vel = obj:get_angular_velocity();
-            obj:detach();
+            --obj:detach();
             obj:set_linear_velocity(lin_vel);
             obj:set_angular_velocity(ang_vel);
 
@@ -218,29 +228,34 @@ function on_step()
             obj:send_event("damage", {
                 amount = 80
             });
+            obj:send_event("activate", {
+                power = 150,
+                points = {point},
+            });
+
+            local joints = obj:get_joints();
+            for i=1,#joints do
+                joints[i]:destroy();
+            end;
+
+            hit_anything = true;
         end;
         if obj:get_name() ~= "Simulo Planet" then
             --gizmo_circle(hits[i].point, Color:rgb(80,80,80), 0.01, "Light");
             local c = gizmo_circle(point, Color:hex(0xffffff), 0.03);
             Scene:add_attachment({
                 name = "Point Light",
-                component = {
-                    name = "Point Light",
-                    code = nil,
-                },
                 parent = c,
                 local_position = vec2(0, 0),
                 local_angle = 0,
-                image = "./packages/core/assets/textures/point_light.png",
-                size = 0.001,
-                color = Color:rgba(0,0,0,0),
-                light = {
+                lights = {{
                     color = 0xffffff,
                     intensity = 5,
                     radius = 5,
                     falloff = 10,
-                }
+                }},
             });
+            hit_anything = true;
         end;
     end;
 
@@ -250,12 +265,21 @@ function on_step()
 
     local circle = Scene:get_objects_in_circle({
         position = origin,
-        radius = 0
+        radius = 0,
+        collision_layers = self:get_collision_layers(),
     });
     for i=1,#circle do
         if circle[i].guid ~= self.guid then
             hit_target(circle[i], origin);
         end;
+    end;
+
+    if hit_anything then
+        crackle:set_volume(0.05);
+        crackle2:set_volume(0.4);
+    else
+        crackle:set_volume(0);
+        crackle2:set_volume(0);
     end;
 end;
 
@@ -267,4 +291,6 @@ function on_destroy()
         beam_parts = nil;
     end;
     clear_gizmos();
+    crackle:destroy();
+    crackle2:destroy();
 end;
